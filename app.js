@@ -4,8 +4,8 @@ var path = require('path');
 var ejs = require("ejs");
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-/*var wx = require('./routes/wxrouter');
-var api = require('./routes/api');*/
+var wx = require('./routes/wxrouter');
+var api = require('./routes/api');
 var page = require('./routes/page');
 
 var app = express();
@@ -38,8 +38,8 @@ app.get('/jssdk',function(req,res){
     res.render('jssdk');
 });
 //weixin
-/*app.use('/wx', wx);
-app.use('/api',api);*/
+app.use('/wx', wx);
+app.use('/api',api);
 app.use(page);
 
 

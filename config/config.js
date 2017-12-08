@@ -2,9 +2,9 @@ module.exports = {
     wx_config: {
         aotu: {
             token: 'microtech123',
-            appid: 'wxe74b7801b2dcda3b',
+            appid: 'wx0d8e9309d7e36ca1',
             WXAdmin : "gh_724524df4446",
-            secret: '6498e1ab347806dda7479f9770cc7b43',
+            secret: 'fc300d00f0c45b6eda740dcdfed6b152',
             template_id : "9xgaEDtMxperA9c-BXcloBIHd42xqa1-y3X6m2I8NPE",
             appKey : "07cf50a1f17a4849290ed2cbcf5aa26c",
             appSecret : "5d8389c5f877",
