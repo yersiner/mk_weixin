@@ -1,0 +1,130 @@
+<% include ../Head/Header.html%>
+<!--顶部内容区域-->
+<div class="scanCodeBody">
+    <div id="SNSubmit" style="display: none">
+        <div class="SNSubmit">
+            <input type="text" name="sn" placeholder="请输入设备的sn">
+            <button id="submit">确定</button>
+        </div>
+        <p id="error">设备号不能为空!</p>
+    </div>
+
+</div>
+<!--底部导航-->
+<div class="scanCode">
+    <div class="scanItem" id="scan">
+        <img src="/img/icon_scanQRcode_normal.png">
+        <span>扫一扫</span>
+    </div>
+    <div class="scanItem" id="picker">
+        <img src="/img/icon_photo_normal.png">
+        <span>相册</span>
+    </div>
+    <div class="scanItem" id="input">
+        <img src="/img/icon_writein_normal.png">
+        <span>手动输入</span>
+    </div>
+</div>
+<script>
+    //页面逻辑调整
+    $(".scanCodeBody").css("background-image","linear-gradient(-135deg, #96E6FF 0%, #7FBDFF 100%)")
+    $(".scanCode .scanItem").tap(function () {
+        if($(this).index()==2){
+            $(".scanCodeBody").css("background-image","none");
+            $("#SNSubmit").show();
+        }else{
+            $(".scanCodeBody").css("background-image","linear-gradient(-135deg, #96E6FF 0%, #7FBDFF 100%)");
+            $("#SNSubmit").hide();
+        }
+    });
+    $()
+    !function () {
+       var url = encodeURIComponent(location.href.split("#")[0]);
+        $.getJSON("/api/jssdk?url=" + url,function (data) {
+            init(data);
+        })
+    }();
+    function init(data) {
+        wx.config({
+            debug : MicroDebug,
+            appId : data.appid,
+            timestamp : data.timestamp,
+            nonceStr : data.noncestr,
+            signature : data.signature,
+            jsApiList: [
+                'chooseImage',
+                'closeWindow',
+                'scanQRCode',
+            ]
+        });
+        //接口准备就绪
+        wx.ready(function () {
+            document.querySelector("#scan").onclick = function () {
+                wx.scanQRCode({
+                    needResult : 1,
+                    desc : "scanQRCode desc",
+                    success : function (data) {
+                        var data = {openId : getCookie("openId"),sn:data.resultStr,type:0}
+                        blindData(data);
+                    }
+                });
+            };
+            document.querySelector("#picker").onclick = function () {
+                return;
+              wx.chooseImage({
+                  success : function (data) {
+                     // alert(data);
+                  }
+              });
+            };
+        });
+    }
+
+    $("#submit").tap(function () {
+        if($(this).prev().val()==""){
+            $("#error").show().text("请输入设备的SN码");
+        }else{
+            var data = {openId :getCookie("openId"),sn:$("input[name=sn]").val(),type:0};
+            blindData(data);
+        }
+    });
+    $("input[name=sn]")[0].onblur = function () {
+        $("#error").hide();
+    }
+    //绑定设备
+    function blindData(data) {
+        $.ajax({
+            type : "post",
+            dataType : "jsonp",
+            url : microtech().api.bindBox,
+            data : data,
+            success : function (data) {
+                alert(JSON.stringify(data));
+                if(data.code==200){
+                    $("#error").show().text("绑定成功");
+                    setTimeout(function () {
+                        window.location.href = "/mkBox";
+                    },500)
+                }else if(data.code==205){
+                    $("input[name=sn]").val("");
+                    $("input[name=sn]")[0].focus;
+                    $("#error").show().text("SN已绑定,请重新输入!");
+                }else if(data.code==202){
+                    $("input[name=sn]").val("");
+                    $("input[name=sn]")[0].focus;
+                    $("#error").show().text("SN不存在,请重新输入!");
+                }else{
+                    $("input[name=sn]").val("");
+                    $("input[name=sn]")[0].focus;
+                    $("#error").show().text("服务器异常，请稍后再试！");
+                }
+            },
+            error : function () {
+
+            }
+        });
+    }
+</script>
+
+<script src="/js/weixin.js"></script>
+<% include ../Footer/Footer.html%>

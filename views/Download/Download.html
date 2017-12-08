@@ -1,0 +1,107 @@
+<% include ../Head/Header.html%>
+<script>
+    /*获取用户信息判断页面的跳转*/
+    var getOpenId = getCookie("openId");
+    var agent = /micromessenger/.test(navigator.userAgent.toLowerCase());
+    if(!getOpenId&&agent){
+        var url = encodeURIComponent("https://weichat.newmicrotech.cn/author");
+        var requestUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+microtech().appid+"&redirect_uri="+url+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+        setCookie("lastHref",location.href);
+        window.location.href = requestUrl;
+    }
+</script>
+<section class="downloadBox" STYLE="display: none">
+	<section class="download">
+		<div class="downloadTop isWeixin" style="display: none">
+			<p>系统已为你生成账户，下载APP后可直接登录</p>
+			<p>
+				<span>账户 : <span id="username">**********</span></span>
+				<span>密码 : <span id="password">**********</span></span>
+			</p>
+		</div>
+		<div class="downloadTop noWeixin" style="display: none">
+			<p STYLE="text-align: center">点击<b>前往下载</b>下载米可云APP</p>
+		</div>
+		<div class="downloadCenter">
+			<img src="/img/download.png">
+			<button data-android="" data-ios="">前往下载</button>
+		</div>
+	</section>
+	<div class="downloadWarning" style="display: none">
+		<img src="/img/markdrop.png">
+	</div>
+</section>
+<script>
+    !(function ($) {
+        var download = {
+            init :function () {
+                this.showData();
+            },
+            isWx : function () {
+                return (function () {
+                    return /micromessenger/.test(navigator.userAgent.toLowerCase());
+                })();
+            },
+            goto : function () {
+                if(this.isWx()){
+                    $(".downloadWarning").animate({
+                        display : "block"
+                    },"ease-in");
+                }else{
+                    if(/iphone/.test(navigator.userAgent.toLowerCase())){
+                        window.location.href = $("button").data("ios");
+                    }else if(/android/.test(navigator.userAgent.toLowerCase())){
+                        window.location.href = $("button").data("android");
+                    }
+                };
+                $(".downloadWarning").tap(function () {
+                    $(this).animate({
+                        display : "none"
+                    },"ease-out");
+                });
+            },
+            showData : function () {
+                $.ajax({
+                    type : "post",
+                    dataType : "jsonp",
+                    url : microtech().api.appDownload,
+                    data : {openId :  getCookie("openId")},
+					beforeSend : function () {
+					 	microtech_modal.loadingOpen('正在加载中')
+                    },
+                    success : function (result) {
+                        if(result.code==200){
+                            var data = result.obj;
+                            if(!agent){
+                                $(".noWeixin").show();
+							}else{
+                                $(".isWeixin").show();
+                                $("#username").text(data.account||"00000000000");
+                                $("#password").text(data.pwd||"000000");
+							}
+                            $("button").data("android",data.url_android).data("ios",data.url_ios)
+							$(".downloadBox").show();
+                        }else if(result.code==202){
+                            window.location.href = "/applyDoctor";
+						}else if(result.code==500){
+                            ErrorRelaod();
+                        }
+                    },
+					complete : function () {
+						microtech_modal.loaddingClose()
+                    },
+					error : function () {
+                        ErrorRelaod();
+                    }
+                })
+            }
+        };
+        //页面数据
+        download.init();
+        //点击下载
+        $("button").tap(function () {
+            download.goto();
+        });
+    })(Zepto)
+</script>
+<% include ../Footer/Footer.html%>

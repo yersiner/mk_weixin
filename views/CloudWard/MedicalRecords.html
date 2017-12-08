@@ -1,0 +1,224 @@
+<% include ../Head/Header.html%>
+<script></script>
+<script>
+    /*获取用户信息判断页面的跳转*/
+    var getOpenId = getCookie("openId");
+    if(!getOpenId){
+        var url = encodeURIComponent("https://weichat.newmicrotech.cn/author");
+        var requestUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+microtech().appid+"&redirect_uri="+url+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+        setCookie("lastHref",location.href);
+        window.location.href = requestUrl;
+    }
+</script>
+	<section class="medicalBox" style="display: none;">
+		<div class="medicalTop"></div>
+		<div class="medicalContent">
+			<div class="contentTitle">
+				<h2><span></span><img src="/img/arrow_icon_white.png"></h2>
+				<p>
+					<span></span>
+					<span></span>
+					<span></span>
+				</p>
+				<div class="decoration">
+					<img src="/img/rot.png">
+					<img src="/img/rot.png">
+				</div>
+			</div>
+			<div class="contentText">
+				<div class="itemText">
+					<div class="tabNav">
+						<span>现病情</span><img src="/img/arrow_icon.png">
+					</div>
+					<p id="illness">*</p>
+				</div>
+				<div class="itemText">
+					<div class="tabNav">
+						<span>即往史</span><img src="/img/arrow_icon.png">
+					</div>
+					<p id="always"></p>
+				</div>
+				<div class="itemText">
+					<div class="tabNav">
+						<span>家族历</span><img src="/img/arrow_icon.png">
+					</div>
+					<p id="familys"></p>
+				</div>
+				<div class="itemText dialogue">
+					<div class="tabNav">
+						<span>诊断</span><img src="/img/arrow_icon.png">
+					</div>
+					<p id="record_des"></p>
+				</div>
+				<!--底部翻页特效-->
+				<img src="/img/bookmark.png">
+			</div>
+		</div>
+<!--弹出框-->
+		<div class="markDrop" style="display: none">
+			<div class="dropContent">
+				<!--<div class="selectItem">
+					<p>常晴（母亲）</p>
+				</div>
+				<div class="selectItem">
+					<p>王粲袄（自己）</p>
+				</div>-->
+				<div class="selectItem" data-type="999">
+					<p>取消</p>
+				</div>
+			</div>
+		</div>
+	</section>
+<script>
+	    var windowLoad = function (opt) {
+	        this.opt = opt;
+	        this.flag = true;
+	        this.content = {}
+	        this.data = {};
+	        this.currentType = "";
+        }
+        windowLoad.prototype.showChoice = function (callback) {
+	        var that = this;
+	        //点击出现遮罩
+			this.opt.startDrop.tap(function () {
+				that.opt.Drop.animate({
+					display : "block",
+					opacity : 1
+				},"ease-in");
+            });
+			//选择关闭遮罩
+			this.opt.Drop.on("click",".selectItem",function () {
+				if (Zepto(this).data("type")=="999"){
+				   that.opt.Drop.animate({
+					   display : "none",
+					   opacity : 0,
+				   },"ease-out");
+				}else {
+				     that.content.openId = Zepto(this).data("value");
+				     /*that.content.type = parseInt(Zepto(this).data("type")) + 1;*/
+				     that.currentType = parseInt(Zepto(this).data("type"));
+                    that.content.type = 1;
+                    that.opt.startDrop.find("span").text(Zepto(this).find("p").text());
+                    that.opt.Drop.animate({
+                        display : "none",
+                        opacity : 0,
+                    },"ease-out");
+				    callback(that.content);
+				}
+            });
+        };
+	    windowLoad.prototype.display = function (callback) {
+	        var that = this;
+			this.opt.showList.each(function (index, data) {
+					Zepto(data).find(".tabNav").tap(function () {
+						Zepto(this).parent(".itemText").siblings().find("p").removeClass("active");
+						Zepto(this).next("p").addClass("active");
+						callback(Zepto(this).parent(".itemText").index())
+                    })
+            })
+        };
+        windowLoad.prototype.getType = function (data) {
+          return getType(data);
+        }
+	    windowLoad.prototype.pageAjax = function ( params) {
+	        var that = this;
+            $.ajax({
+                type : "post",
+                dataType : "jsonp",
+                url : microtech().api.usersCases,
+                data : params,
+                beforeSend : function () {
+					microtech_modal.loadingOpen("正在加载中")
+                },
+                success : function (result) {
+                    try{
+                        if(result.code==200){
+                            var data = result.obj;
+                            var html = "";
+                            var cancelHtml = '<div class="selectItem" data-type="999"> <p>取消</p> </div>';
+                            $(".dropContent").empty();
+                            if(!data.result){
+                                $("body").html(microtech_modal.noData());
+							}else{
+                                data.result.forEach(function (item,index,array) {
+                                    html += "<div class='selectItem' data-value = '"+item.user_id+"' data-type='"+item.relation+"'>" +
+                                        "<p>"+item.name+"("+that.getType(item.relation)+")</p>" +
+                                        "</div>"
+                                    //判断第一次加载请 默认为第一条
+                                    if(that.flag){
+                                        if(index==0){
+                                            that.data = item;
+                                        }
+                                        that.flag = false;
+                                    }else{
+                                        if(item.relation==that.currentType){
+                                            that.data = item;
+                                        }
+                                    }
+                                });
+                                $(".dropContent").prepend(html + cancelHtml);
+                                //头部信息展示
+                                $(".contentTitle h2").children("span").text(that.data.name + "(" +that.getType(that.data.relation)+")");
+                                $(".contentTitle p").children().eq(0).text(that.data.sex==1?"男":"女");
+                                $(".contentTitle p").children().eq(1).text(that.data.age);
+                                $(".contentTitle p").children().eq(2).text(that.data.phone);
+                                if(data.casesList){
+                                    //病情分析
+                                    $("#illness").html(data.casesList.illness);
+                                    $("#always").html(data.casesList.always);
+                                    $("#familys").html(data.casesList.familys);
+                                    $("#record_des").html(data.casesList.record_des);
+                                }else{
+                                    //病情分析
+                                    $("#illness").html("无");
+                                    $("#always").html("无");
+                                    $("#familys").html("无");
+                                    $("#record_des").html("无");
+                                }
+                                $(".medicalBox").show();
+							}
+                        }else if(result.code==206){//没有绑定盒子
+                            location.href = "/mkBox";
+                        }else if(result.code==202){//非邀请关注
+                            location.href = "/applyDoctor";
+                        }else if(result.code==500){ //服务器错误
+                            ErrorRelaod();
+                        }
+					}catch (e){
+                       console.log(e);
+                       $("body").html(microtech_modal.noData());
+					}
+                },
+				complete : function () {
+					microtech_modal.loaddingClose();
+                },
+                error : function (err) {
+                    ErrorRelaod();
+                }
+            })
+        }
+	window.onload = function () {
+	    var option = {
+            startDrop : Zepto(".contentTitle h2"),
+			Drop : Zepto(".markDrop"),
+			showList : Zepto(".itemText")
+		}
+		var Docment = new windowLoad(option);
+	    //页面数据加载
+	    Docment.pageAjax({
+            openId :getCookie("openId"),
+            type : 0
+		});
+		//点击上拉菜单
+        Docment.showChoice(function (msg) {
+			Docment.pageAjax(msg);
+        });
+        //点击展开和关闭
+	    Docment.display(function (msg) {
+			console.log(msg);
+        });
+    }
+
+
+</script>
+<% include ../Footer/Footer.html%>

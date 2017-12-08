@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title><%=title%></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta name="Description" content="米可医疗"/>
+	<meta name="Keywords" content="米可医疗"/>
+	<meta http-equiv="Pragma" content="no-cache" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/mui.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/mui.picker.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
+	<style>
+		input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, textarea{
+			margin-bottom: 0;
+		}
+		.mui-btn, button, input[type=button], input[type=reset], input[type=submit]{
+			padding: 0;
+		}
+		.mui-btn-blue, .mui-btn-primary, input[type=submit]{
+			color: #fff;
+			border: 1px solid #38E6FF;
+			background-color: #38E6FF;
+		}
+		.mui-table-view-cell>a:not(.mui-btn){
+			color: #A2ADCE;
+			font-size: .28rem;
+		}
+		.mui-popover .mui-table-view{
+			max-height: none;
+		}
+	</style>
+</head>
+<body>
+<div class="applyBox">
+	<section class="applyHeader alterData">
+		<img src="/img/icon_ButtonA.png">
+		<span>物理按键<span>A</span>对应的使用者</span>
+	</section>
+	<section class="applyContact alterData">
+		<div class="inputItem">
+			<label>姓名 : </label>
+			<input type="text" name="username" value="" placeholder="请输入绑定者姓名">
+		</div>
+		<div class="inputItem">
+			<label>电话 : </label>
+			<input type="text" name="phone" placeholder="手机如实填写，获取体征数据的唯一标示" maxlength="11">
+		</div>
+		<div class="inputItem selectTime" id="selectTime">
+			<label>生日 : </label>
+			<div class="input">
+				<span style="color:#D1DDE6 ">请选择</span>
+				<img src="/img/arrow_icon.png">
+			</div>
+		</div>
+		<div class="inputItem">
+			<label>关系 : </label>
+			<a class="input" href="#picture" id="relation">
+				<span style="color:#D1DDE6 ">请选择</span>
+				<img src="/img/arrow_icon.png">
+			</a>
+		</div>
+	</section>
+	<section class="applySubmit alterData">
+		<button id="submit">提交</button>
+	</section>
+</div>
+<div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell">
+			<a value="8" href="#">女儿</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a value="7" href="#">儿子</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a value="6" href="#">外婆</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a value="5" href="#">外公</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a value="4" href="#">奶奶</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a value="3" href="#">爷爷</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a value="2" href="#">妈妈</a>
+		</li>
+		<li class="mui-table-view-cell">
+			<a value="1" href="#">爸爸</a>
+		</li>
+		<!--<li class="mui-table-view-cell">
+			<a value="0" href="#">自己</a>
+		</li>-->
+	</ul>
+	<ul class="mui-table-view">
+		<li class="mui-table-view-cell">
+			<a href="#picture" value="22" style="font-size:.28rem;color: #FD5EA1;">取消</a>
+		</li>
+	</ul>
+</div>
+</body>
+<script src="/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/adapter.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/zepto_ajax.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	//mui.init();
+	//查询url
+    function GetQueryString(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = decodeURI(window.location.search).substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+    };
+    //获取cookie
+    function getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+    //上传变量 flag=true  添加  flag=false 编辑
+	var name,type,user_id,
+		openId=getCookie("openId"),
+		flag=true,relationType=0,
+		family_id =getCookie("family_id"),
+		region_id =getCookie("region_id"),
+		box_id = getCookie("box_id");
+    	sn =  getCookie("sn");
+    //图标替换
+    type = GetQueryString("type");
+    if(type==0){
+        mui(".applyHeader img")[0].src = "/img/icon_ButtonA.png";
+        mui(".applyHeader span span")[0].innerText = "A";
+        type = "UserA";
+    }else if(type==1){
+        mui(".applyHeader img")[0].src = "/img/icon_ButtonB.png";
+        mui(".applyHeader span span")[0].innerText = "B";
+        type = "UserB";
+    }else if(type==2){
+        mui(".applyHeader img")[0].src = "/img/icon_ButtonC.png";
+        mui(".applyHeader span span")[0].innerText = "C";
+        type  = "UserC"
+    };
+	if(GetQueryString("name")){
+	 name = GetQueryString("name");
+     user_id = GetQueryString("id");
+     //type = GetQueryString("type");
+	 mui("input[name=username]")[0].value =decodeURI(name)
+     mui("input[name=username]")[0].setAttribute("readonly","readonly");
+     flag = false;
+	}
+	mui("#selectTime").on("tap",".input",function () {
+	    mui("input[name=phone]")[0].blur();
+        mui("input[name=username]")[0].blur();
+	    var that = this;
+		var picker = new mui.DtPicker({
+			type : "datatime",
+            beginDate : new Date(1940,12,12),
+			endDate : new Date()
+		});
+		picker.show(function (ts) {
+			var year = ts.y.value;
+			var mouth = ts.m.value;
+			var day = ts.d.value;
+			mui(that)[0].getElementsByTagName("span")[0].innerText = year + "/" + mouth + "/" + day;
+            mui(that)[0].getElementsByTagName("span")[0].style.color = "#7FBDFF";
+        })
+    });
+    mui('body').on('tap', '.mui-popover-action li>a', function() {
+            mui("input[name=phone]")[0].blur();
+		    mui("input[name=username]")[0].blur();
+			if(this.getAttribute("value")=="22"){
+			    return;
+			}
+			mui("#relation")[0].getElementsByTagName("span")[0].innerText = this.innerHTML;
+        	mui("#relation")[0].getElementsByTagName("span")[0].style.color = "#7FBDFF";
+        	relationType=this.getAttribute("value");
+			mui(this.parentNode.parentNode.parentNode).popover("toggle");
+
+    });
+	(function ($) {
+        //电话验证
+        mui("input[name=phone]")[0].onkeyup = function () {
+            this.value = this.value.replace(/\D/,"");
+        }
+        mui("input[name=phone]")[0].onblur = function () {
+            if(!/^1[0-9]{10}/.test(this.value)){
+                this.value="";
+                this.setAttribute("placeholder","请输入有效的11位电话号码");
+            }
+        }
+		document.getElementById("submit").addEventListener("tap",function () {//必须是id
+			var self = this;
+			var name = mui("input[name=username]")[0];
+			var phone = mui("input[name=phone]")[0];
+			var birthday = mui("#selectTime")[0].getElementsByTagName("span")[0].innerText;
+			var relation = mui("#relation")[0].getElementsByTagName("span")[0].innerText;
+            validate(name,phone,function (msg) {
+                var url = "https://doc.newmicrotech.cn/weichat/usersBoxEdit";
+                var url2 = "http://192.168.1.135:9999/weichat/usersBoxEdit";
+				if(msg){
+                    mui(self).button("loading");
+                    Zepto.ajax({
+                        type : "post",
+                        dataType : "jsonp",
+                        url : url,
+                        data : {
+                            openId : openId,
+                            user_id:user_id==undefined? "":user_id,
+                            name:name.value,
+                            phone:phone.value,
+                            birth_data:new Date(birthday).getTime(),
+                            relation:relationType,
+                            sn:sn,
+                            box_type:type,
+                            type:flag?"0":"1",
+                            family_id:family_id,
+                            region_id:region_id,
+							box_id :box_id
+						},
+                        success : function (data) {
+                            mui(self).button("reset");
+							if(data.code==200){
+							    if(flag){
+                                    mui.alert("绑定成功，是否跳转？",function (msg) {
+                                        if(msg.index == 0){
+                                            window.location.href = "/mkBox";
+										}
+                                    },"提示",["确定","取消"])
+								}else{
+                                    mui.alert("编辑成功，是否跳转？",function (msg) {
+                                        if(msg.index == 0){
+                                            window.location.href = "/mkBox";
+                                        }
+                                    },"提示",["确定","取消"])
+								}
+							/*	setTimeout(function () {
+                                    window.location.href = "/mkBox";
+                                },500);*/
+							}else{
+							    mui.toast()
+							}
+                        },
+                        error : function (err) { }
+                    });
+
+				}
+            })
+        });
+    })(mui)
+    //数据验证
+    function validate() {
+	    var flag = true;
+        if(typeof arguments[arguments.length-1] == "function"){
+            for(var i=0;i<arguments.length-1;i++){
+                if(arguments[i].value==""){
+                    flag = false;
+                    arguments[i].setAttribute("placeholder","此项不可为空");
+                }
+            }
+            arguments[arguments.length-1](flag);
+        }else{
+            throw "参数错误";
+        }
+    }
+
+
+
+</script>
+</html>

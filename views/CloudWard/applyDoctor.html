@@ -1,0 +1,166 @@
+<% include ../Head/Header.html%>
+<script>
+    /*获取用户信息判断页面的跳转*/
+    var getOpenId = getCookie("openId");
+    if(!getOpenId){
+        var url = encodeURIComponent("https://weichat.newmicrotech.cn/author");
+        var requestUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+microtech().appid+"&redirect_uri="+url+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+        setCookie("lastHref",location.href);
+        window.location.href = requestUrl;
+    }
+</script>
+<div class="tip">提交成功，我们会在24小时内给您安排签约医生，请耐心等待！</div>
+<div class="applyBox">
+    <section class="applyHeader">
+        完善以下信息，享专属家庭医生！
+    </section>
+    <section class="applyContact">
+       <div class="inputItem">
+           <label>姓名 : </label>
+           <input type="text" name="username" placeholder="请输入姓名">
+       </div>
+        <div class="inputItem">
+            <label>电话 : </label>
+            <input type="text" name="phone" placeholder="11位数有效有效电话号码" maxlength="11" >
+        </div>
+        <div class="inputItem">
+            <label>地址 : </label>
+            <input type="text" name="address" placeholder="家庭地址如××市××区××街道" >
+        </div>
+    </section>
+    <section class="applyChoice">
+       <h3>重点人群标记（多选）</h3>
+        <div class="markItem">
+            <span>高血压</span>
+            <i class="microtchFamily microtech-gou"></i>
+        </div>
+        <div class="markItem">
+            <span>糖尿病</span>
+            <i class="microtchFamily microtech-gou"></i>
+        </div>
+        <div class="markItem">
+            <span>老年人</span>
+            <i class="microtchFamily microtech-gou"></i>
+        </div>
+        <div class="markItem">
+            <span>孕妇</span>
+            <i class="microtchFamily microtech-gou"></i>
+        </div>
+    </section>
+    <section class="applySubmit">
+       <button>提交</button>
+    </section>
+</div>
+<script>
+    //重点标记人群
+    var objArray = [
+       /* {"type":0,"value":""},
+        {"type":1,"value":""},
+        {"type":2,"value":""},
+        {"type":3,"value":""}*/
+    ],
+        username,phone,address,openId = getCookie("openId"),isApply = getCookie("apply"),historyData = getCookie("session");
+    //选择
+    if(isApply!=null||historyData!=null){
+            $(".tip").show();
+            historyData = JSON.parse(historyData);
+            $("input[name=username]").val(historyData.name).attr("readonly","readonly");
+            $("input[name=phone]").val(historyData.phone).attr("readonly","readonly");
+            $("input[name=address]").val(historyData.address).attr("readonly","readonly");
+            var sessionArray =JSON.parse(historyData.marke);
+            sessionArray.forEach(function (list,index) {
+                if(list.value!=""){
+                    $(".markItem").eq(index-1).addClass("active");
+                    $(".applyChoice .markItem").off("tap");
+                }
+            });
+            $(".applySubmit button").hide();
+    }
+    $(".applyChoice .markItem").tap(function () {
+        if($(this).hasClass("active")){
+            $(this).removeClass("active");
+           for(var i=0;i<objArray.length; i++) {
+               if (objArray[i].type == $(this).index() - 1) {
+                   objArray.splice(i,1);
+               }
+           }
+        }else{
+            $(this).addClass("active");
+            objArray.push({type : $(this).index()-1,value : $(this).find("span").text()});
+        }
+    })
+    //电话验证
+    $("input[name=phone]")[0].onkeyup = function () {
+        this.value = this.value.replace(/\D/,"");
+    }
+    $("input[name=phone]")[0].onblur = function () {
+        if(!/^1[0-9]{10}/.test(this.value)){
+            this.value="";
+            this.setAttribute("placeholder","请输入有效的11位电话号码");
+        }
+    }
+    $(".applySubmit").tap(function () {
+         username = $("input[name=username]")[0];
+         phone = $("input[name=phone]")[0];
+         address = $("input[name=address]")[0];
+         validate(username,phone,address,function (flag) {
+            //这里做上传操作 flag true/false
+             if(flag){
+                 $.ajax({
+                     type : "get",
+                     dataType : "jsonp",
+                     url : microtech().api.signDoctor,
+                    // traditional : true,
+                     data : {
+                         openId : openId,
+                         name : username.value,
+                         phone : phone.value,
+                         address : address.value,
+                         marke : JSON.stringify(objArray)
+                     },
+                     beforeSend : function () {
+                         microtech_modal.loadingOpen("正在提交中");
+                     },
+                     success : function (data) {
+                        if(data.code==200){
+                            microtech_modal.toastOpen("申请成功");
+                            var session = {
+                                name : username.value,
+                                phone : phone.value,
+                                address : address.value,
+                                marke : JSON.stringify(objArray)
+                            };
+                            setCookie("session",JSON.stringify(session));
+                            setCookie("apply",true);
+                            $(".tip").show();
+                        }else if(data.code==202){
+                            microtech_modal.toastOpen("不存在该医生")
+                        }else if(data.code==500){
+                            microtech_modal.toastOpen("数据异常")
+                        }
+                     },
+                     complete : function () {
+                         microtech_modal.loaddingClose();
+                     }
+                 })
+             }
+         })
+    })
+    //数据验证
+    function validate() {
+        var flag = true;
+        if(typeof arguments[arguments.length-1] == "function"){
+            for(var i=0;i<arguments.length-1;i++){
+                if(arguments[i].value==""){
+                    flag = false;
+                    arguments[i].setAttribute("placeholder","此项不可为空");
+                }
+            }
+            arguments[arguments.length-1](flag);
+        }else{
+            throw "参数错误";
+        }
+    }
+</script>
+
+<% include ../Footer/Footer.html%>

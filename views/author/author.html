@@ -1,0 +1,31 @@
+<% include ../Head/Header.html%>
+<script>
+    /*获取用户信息判断页面的跳转*/
+    function GetQueryString(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+    $.ajax({
+        type:"post",
+        url : '/api/getAuth',
+        data : {code :GetQueryString("code")},
+        success:function (data) {
+            data = JSON.parse(data);
+            // console.log(data.openid);
+            if(MicroDebug){
+                setCookie("openId","oTJAHv9zi43iPzToDDwEtdVGxs1c");
+            }else{
+                setCookie("openId",data.openid);
+            }
+
+            //alert(window.localStorage.getItem("openId"));
+            //localStorage.openId = data.openid;
+            var url = getCookie("lastHref");
+            window.location.href = url;
+        }
+    })
+</script>
+<% include ../Footer/Footer.html%>
+

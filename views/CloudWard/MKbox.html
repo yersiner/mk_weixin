@@ -1,0 +1,237 @@
+<% include ../Head/Header.html%>
+<script>
+    /*获取用户信息判断页面的跳转*/
+    var getOpenId = getCookie("openId");
+    if(!getOpenId){
+        var url = encodeURIComponent("https://weichat.newmicrotech.cn/author");
+        var requestUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+microtech().appid+"&redirect_uri="+url+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+        setCookie("lastHref",location.href);
+        window.location.href = requestUrl;
+    }
+</script>
+<div class="mkBoxContent">
+	<section class="box_top" style="display: none">
+		<div class="top_left">
+			<img src="/img/mkbox.png"/>
+		</div>
+		<div class="top_right">
+			<p>型号 : <span>********</span></p>
+			<p>S&nbsp;N : <span>********</span></p>
+			<a data-id="">*</a>
+			<!--href="/blindEquip"-->
+		</div>
+	</section>
+	<section class="box_center" style="display: none">
+		<h3>绑定使用者</h3>
+		<div class="center_list">
+			<p>
+				<img src="/img/icon_ButtonA.png">
+				<span>物理按键A</span>
+			</p>
+			<p class="noBlind"><span>未绑定</span></p>
+			<p>
+				<a class="noBlind" data-id="" data-type="0" data-name="">绑定</a>
+			</p>
+		</div>
+		<div class="center_list">
+			<p>
+				<img src="/img/icon_ButtonB.png">
+				<span>物理按键B</span>
+			</p>
+			<p class="noBlind"><span>未绑定</span></p>
+			<p>
+				<a class="noBlind"  data-id="" data-type="1" data-name="">绑定</a>
+			</p>
+		</div>
+		<div class="center_list">
+			<p>
+				<img src="/img/icon_ButtonC.png">
+				<span>物理按键C</span>
+			</p>
+			<p class="noBlind"><span>未绑定</span></p>
+			<p>
+				<a class="noBlind"  data-id="" data-type="2" data-name="">绑定</a>
+				<!--href="/alterData"-->
+			</p>
+		</div>
+	</section>
+	<section class="box_bottom" style="display: none">
+		<p><img src="/img/Star.png"></p>
+		<p> 为了保证数据与使用者正确对应，请严格按照以上关系绑定数据，平台最终根据绑定的关系显示数据！</p>
+	</section>
+</div>
+<script src="/js/weixin.js"></script>
+<script>
+    !function () {
+        var url = encodeURIComponent(location.href.split("#")[0]);
+        $.getJSON("/api/jssdk?url=" + url,function (data) {
+            init(data);
+        })
+    }();
+    function init(data) {
+        wx.config({
+            debug: MicroDebug,
+            appId: data.appid,
+            timestamp: data.timestamp,
+            nonceStr: data.noncestr,
+            signature: data.signature,
+            jsApiList: [
+                'scanQRCode',
+            ]
+        });
+    }
+	//页面数据加载
+    $.ajax({
+        type : "post",
+        dataType : "jsonp",
+        url : microtech().api.usersBoxInfo,
+        data : {openId :getCookie("openId")},
+        beforeSend : function () {
+			microtech_modal.loadingOpen("正在加载中");
+        },
+        success : function (result) {
+           // alert(JSON.stringify(data))
+			if(result.code==200){
+               var  data = result.obj;
+				//绑定  设备信息
+				$(".top_right").children().eq(0).find("span").text(data.boxInfo.model);
+				var boxSn = data.boxInfo.sn.substring(5,12);
+				var regStr = new RegExp(boxSn);
+				$(".top_right").children().eq(1).find("span").text((data.boxInfo.sn).replace(regStr,"***"));
+				$(".top_right").find("a").data("id", data.boxInfo.sn);
+				setCookie("sn",data.boxInfo.sn);
+		        setCookie("box_id",data.boxInfo._id);
+				setCookie("family_id",data.boxInfo.family_id);
+			/* 	setCookie("region_id",data.result[0].region_id);*/
+				$(".top_right").find("a").text("解除绑定");
+				//按键绑定信息
+				if(data.result.UserA){
+					$(".center_list").eq(0).children().eq(2).find("a").removeClass("noBlind").data("id",data.result.UserA.user_id).data("name",data.result.UserA.name +"("+  getType(data.result.UserA.relation)+")").text("编辑");
+					$(".center_list").eq(0).children().eq(1).removeClass("noBlind").find("span").text(data.result.UserA.name +"("+  getType(data.result.UserA.relation)+")")
+				}
+				if(data.result.UserB){
+					$(".center_list").eq(1).children().eq(2).find("a").removeClass("noBlind").data("id",data.result.UserB.user_id).data("name",data.result.UserB.name +"("+  getType(data.result.UserB.relation)+")").text("编辑");
+					$(".center_list").eq(1).children().eq(1).removeClass("noBlind").find("span").text(data.result.UserB.name +"("+  getType(data.result.UserB.relation)+")")
+				}
+				if(data.result.UserC){
+					$(".center_list").eq(2).children().eq(2).find("a").removeClass("noBlind").data("id",data.result.UserC.user_id).data("name",data.result.UserC.name +"("+  getType(data.result.UserC.relation)+")").text("编辑");
+					$(".center_list").eq(2).children().eq(1).removeClass("noBlind").find("span").text(data.result.UserC.name +"("+  getType(data.result.UserC.relation)+")")
+				}
+                $(".mkBoxContent").children().show();
+			}else if(result.code==206){
+               // $(".box_top").siblings().hide();
+                $(".top_right").children().eq(0).find("span").text("********");
+                $(".top_right").children().eq(1).find("span").text("********");
+                $(".top_right").find("a").text("绑定设备");
+                $(".box_top").show();
+			}else if(result.code==202){
+			//  location.href = "/applyDoctor";
+			} else if(result.code==500){
+                ErrorRelaod();
+			}
+        },
+		complete : function () {
+			microtech_modal.loaddingClose();
+        },
+        error : function (err) {
+            ErrorRelaod();
+        }
+    });
+    //解除绑定
+    $(".top_right a").tap(function () {
+        var that = this;
+       /* var object = $(".deleteTip");*/
+        var id = $(that).data("id");
+        if(!id){
+            wx.ready(function () {
+                wx.scanQRCode({
+                    needResult : 1,
+                    desc : "scanQRCode desc",
+                    success : function (data) {
+                        //alert(JSON.stringify(data));
+                        var data = {openId : getCookie("openId"),sn:data.resultStr,type:0}
+                        blindData(data);
+                    }
+                });
+            })
+           /* window.location.href = "/blindEquip"*/
+        }else{
+			microtech_modal.confirmOpen("解绑后系统将清除你的相关信息，确定要解绑吗？",function (msg) {
+				if(msg){
+                    $.ajax({
+                        type : "post",
+                        dataType : "jsonp",
+                        url : microtech().api.bindBox,
+                        data : {openId:getCookie("openId"),type:1,sn:id},
+                        beforeSend : function () {
+							microtech_modal.loadingOpen("请求提交中");
+                        },
+                        success : function (data) {
+                            if(data.code==200){
+                                if(data.obj=="success"){
+                                    $(".box_top").siblings().hide();
+                                    $(".top_right").children().eq(0).find("span").text("********");
+                                    $(".top_right").children().eq(1).find("span").text("********");
+                                    $(".top_right").find("a").text("绑定设备");
+                                    $(that).data("id","");
+									microtech_modal.toastOpen("解绑成功")
+                                }
+                            }else{
+                                microtech_modal.toastOpen("解绑成功")
+                            }
+                        },
+						complete : function () {
+							microtech_modal.loaddingClose();
+                        },
+                        error : function () {
+                            microtech_modal.toastOpen("数据异常，请稍后再试")
+                        }
+                    });
+				}else{
+				    microtech_modal.confirmClose();
+				}
+            })
+        }
+    })
+	//增加绑定
+	$(".center_list").find("a").tap(function () {
+		var id = $(this).data("id");
+		var name = $(this).data("name");
+		var type = $(this).data("type");
+		if(!id || !name ){
+		    window.location.href = "/alterData?type=" + type;
+		}else {
+		    window.location.href = "/alterData?type=" + type + "&name=" + encodeURI(name) + "&id=" + id;
+		}
+    });
+    /**
+	 * 扫码绑定设备
+	 * **/
+    function blindData(data) {
+        $.ajax({
+            type : "post",
+            dataType : "jsonp",
+            url : microtech().api.bindBox,
+            data : data,
+            success : function (data) {
+               // alert(JSON.stringify(data));
+                if(data.code==200){
+                  microtech_modal.toastOpen("绑定成功");
+                  location.href = location.href + "?"+Math.random()*10;
+                }else if(data.code==205){
+                    microtech_modal.toastOpen("SN已绑定");
+                }else if(data.code==202){
+                    microtech_modal.toastOpen("SN不存在");
+                }else{
+                    microtech_modal.toastOpen("服务器异常，请稍后再试");
+                }
+            },
+            error : function () {
+				ErrorRelaod();
+            }
+        });
+    }
+</script>
+
+
+<% include ../Footer/Footer.html%>

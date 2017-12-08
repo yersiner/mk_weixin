@@ -1,0 +1,220 @@
+<% include ../Head/Header.html%>
+<script>
+    /*获取用户信息判断页面的跳转*/
+    var getOpenId = getCookie("openId");
+    if(!getOpenId){
+        var url = encodeURIComponent("https://weichat.newmicrotech.cn/author");
+        var requestUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+microtech().appid+"&redirect_uri="+url+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+        setCookie("lastHref",location.href);
+        window.location.href = requestUrl;
+    }
+</script>
+<div class="familyDoctor" style="display: none">
+	<div class="doctorInfo">
+		<!--内容部分-->
+		<div class="doctorAvator">
+			<h3>工号 : <span></span></h3>
+			<div class="doctorName">
+				<div class="avator">
+					<img src="/img/avator.jpg">
+					<img src="/img/man_icon@2x.png">
+					<img src="/img/woman_icon@2x.png">
+				</div>
+				<div class="name">
+					<span></span>
+					<span>康怡灰</span>
+					<span></span>
+				</div>
+				<p class="des">主治医生</p>
+			</div>
+		</div>
+		<!--医生信息-->
+		<div class="doctorContact">
+			<div class="contactDes">
+				<p class="desLeft">
+					<i class="microtchFamily microtech-education"></i>
+					<span>学历</span>
+				</p>
+				<p class="desRight" id="education">本科</p>
+			</div>
+			<div class="contactDes margin">
+				<p class="desLeft">
+					<i class="microtchFamily microtech-phone_icon_search_pr"></i>
+					<span>电话</span>
+				</p>
+				<p class="desRight" id="phone">15189037852</p>
+			</div>
+			<div class="contactDes">
+				<p class="desLeft">
+					<i class="microtchFamily microtech-hospital_icon_search"></i>
+					<span >医院</span>
+				</p>
+				<p class="desRight" id="workAdd">金阳社区第二人民医院</p>
+			</div>
+		</div>
+		<div class="doctorDes">
+			<div class="desTitle">
+				<span></span>
+				<span>简介 : </span>
+			</div>
+			<div class="desContent">
+				主任医师，教授，博士生导师，全国优秀临床研修老师，北京市中医住院医师规范化培训师承指导老师，全国中医院优秀院长。受教于中医大师刘渡舟教授、苏宝刚教授，继承经典辨证思路，擅长运用精方辨证施治。
+				从事中医临床38年余，对中医内伤杂病，人体血管疾病等有较深造诣。临床诊治中医内科杂病、肾病、呼吸病、咳嗽、喘息、上呼吸道感染、肿瘤的术前及术后的中医调理等有显著的疗效
+			</div>
+		</div>
+		<div class="workTime">
+			<div class="workContent">
+				<ul class="workTitle">
+					<li><i class="microtchFamily microtech-tingzhenqi_stethoscope"></i><span>门诊时间</span></li>
+				</ul>
+				<ul class="workText title">
+					<li></li>
+					<li>上午</li>
+					<li>中午</li>
+					<li>晚上</li>
+				</ul>
+				<ul class="workText">
+					<li class="weekDay">星期一</li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+				</ul>
+				<ul class="workText">
+					<li class="weekDay">星期二</li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+				</ul>
+				<ul class="workText">
+					<li class="weekDay">星期三</li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+				</ul>
+				<ul class="workText">
+					<li class="weekDay">星期四</li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+				</ul>
+				<ul class="workText">
+					<li class="weekDay">星期五</li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+				</ul>
+				<ul class="workText">
+					<li class="weekDay">星期六</li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+				</ul>
+				<ul class="workText">
+					<li class="weekDay">星期天</li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+					<li><i class="microtchFamily "></i></li>
+				</ul>
+				<ul class="workTextEnd">
+					<li>&nbsp;</li>
+					<li>&nbsp;</li>
+					<li>&nbsp;</li>
+					<li>&nbsp;</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="getBottom">
+		<span></span>
+		<span>到底啦</span>
+		<span></span>
+	</div>
+	<div class="button">
+		<button id="contactBtn">联系医生</button>
+	</div>
+</div>
+<script>
+	$.ajax({
+		type : "post",
+		dataType : "jsonp",
+		url : microtech().api.usersInfo,
+		data : {openId :getCookie("openId")},
+        beforeSend : function () {
+			microtech_modal.loadingOpen("正在加载中");
+        },
+		success : function (result) {
+		 if(result.code ==500){
+             $("body").empty();
+             $("body").css({"height":"100%","width":"100%%","background":"url(/img/reload.png) center center"});
+             $("body").tap(function () {
+				 window.location.reload();
+             });
+		 }else if(result.code==200){
+		     var data = result.obj;
+             //头部
+             $(".doctorAvator h3 span").text(data.job_number || '0000000');
+             $(".avator").find("img").css("display","none").eq(data.sex).css("display","block");
+             $(".doctorName .name").find("span").eq(1).text(data.name || "无");
+             $(".des").text(data.gov.title || "无")
+             $(".avator").find("img").eq(0).attr("src",data.avatar?("http://ov62zyke0.bkt.clouddn.com/"+data.avatar):"/img/defualt.png").css("display","block");
+             //联系方式
+             $("#education").text(data.education);
+             $("#phone").text(data.phone);
+             $("#workAdd").text(data.govDoc);
+             //医生简介
+             $(".desContent").html(data.profile);
+             //医生上班表
+			 if(data.visits_weeks){
+                 var workTime = data.visits_weeks.visit_cycle;
+                 workTime.forEach(function (item,index,array) {
+                     var liItem =  $(".workText").eq(parseInt(item.day)).find("li");
+                     if(item.forenoon==1){
+                         liItem.eq(1).children().addClass("microtech-gou");
+                     };
+                     if(item.at_noon == 1){
+                         liItem.eq(2).children().addClass("microtech-gou");
+                     }
+                     if(item.evening == 1){
+                         liItem.eq(3).children().addClass("microtech-gou");
+                     }
+                 });
+			 }
+            $(".familyDoctor").show();
+		 }else if(result.code==202){
+			location.href = "/applyDoctor";
+		 }
+        },
+		complete : function () {
+			microtech_modal.loaddingClose();
+        },
+		error : function (err) {
+            ErrorRelaod();
+        }
+	});
+    !function () {
+        var url = encodeURIComponent(location.href.split("#")[0]);
+        $.getJSON("/api/jssdk?url=" + url,function (data) {
+            init(data);
+        })
+    }();
+    function init(data) {
+        wx.config({
+            debug : MicroDebug,
+            appId : data.appid,
+            timestamp : data.timestamp,
+            nonceStr : data.noncestr,
+            signature : data.signature,
+            jsApiList: [
+                'closeWindow',
+            ]
+        });
+        //接口准备就绪
+        wx.ready(function () {
+			document.querySelector("#contactBtn").onclick = function () {
+			  wx.closeWindow();
+			};
+        });
+    }
+</script>
+<script src="/js/weixin.js"></script>
+<% include ../Footer/Footer.html%>

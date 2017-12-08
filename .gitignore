@@ -1,0 +1,10 @@
+start.sh
+
+# VIM
+*~
+*.swp
+*.log
+*.vscode
+node_modules
+.idea
+

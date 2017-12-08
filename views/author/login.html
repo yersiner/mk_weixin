@@ -1,0 +1,53 @@
+<% include ../Head/Header.html%>
+<script>
+    /*获取用户信息判断页面的跳转*/
+    var getOpenId = getCookie("openId");
+    if(!getOpenId){
+        var url = encodeURIComponent("https://weichat.newmicrotech.cn/author");
+        var requestUrl ="https://open.weixin.qq.com/connect/oauth2/authorize?appid="+microtech().appid+"&redirect_uri="+url+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+        setCookie("lastHref",location.href);
+        window.location.href = requestUrl;
+    }
+</script>
+<form class="loginContent">
+    <input type="text" placeholder="请输入11位有效手机号码" name="phone" maxlength="11" required>
+    <blockquote>提示 : 请绑定你米可云APP的账号，以便即时的为你推送您的健康数据。 </blockquote>
+    <button type="button">绑定</button>
+</form>
+<script>
+    var text = "请输入11位有效手机号码";
+    valdate($("input[name=phone]"));
+    //点击提交
+    $("button").tap(function () {
+        var inputVal = $("input[name=phone]");
+        if(inputVal==""){
+            inputVal.attr("placeholder",text);
+        }else{
+            var sendData = {
+                openId : getCookie("openId"),
+                phone : inputVal.val()
+            };
+            $.ajax({
+                url : microtech().api.login,
+                type : "get",
+                dataType : "jsonp",
+                data : sendData,
+                success : function (data) {
+                    alert(data);
+                }
+            });
+        }
+    });
+    //验证
+    function  valdate(obj) {
+        obj[0].onkeyup = function () {
+            this.value = this.value.replace(/\D/,"");
+        };
+        obj[0].onblur = function () {
+           var result =  /^1[0-9]{10}/.test(this.value);
+           this.placeholder = text;
+        }
+    }
+</script>
+<% include ../Footer/Footer.html%>
+
