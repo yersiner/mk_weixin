@@ -4,7 +4,7 @@ setCookie("openId","oTJAHv_Txa16PspKB-_r-B8c_-5c")
 var microtech = function () {
     var baseUrl = "http://192.168.1.135:9999/weichat"; //测试url
     // var baseUrl = "https://doc.newmicrotech.cn/weichat" //正式服务器
-    var appid = "wxe74b7801b2dcda3b";
+    var appid = "wx0d8e9309d7e36ca1";
     var api = {
         "usersInfo" : baseUrl + "/usersInfo", //获取用户的相关信息 电话/绑定医生/医生详情
         "usersBoxInfo":baseUrl + "/usersBoxInfo",

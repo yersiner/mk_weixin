@@ -18,11 +18,11 @@ var router = new VueRouter({
   routes,
   linkActiveClass: "active"
 });
-console.log(7);
+
 // 微信授权插件初始化
 Vue.use(WechatAuth , {
   router, // 路由实例对象
-  appid: 'wxe74b7801b2dcda3b', // 您的微信appid
+  appid: 'wx0d8e9309d7e36ca1', // 您的微信appid
   responseType: 'code',  // 返回类型，请填写code
   scope: 'snsapi_base', // 应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
   getCodeCallback (code, next) {
