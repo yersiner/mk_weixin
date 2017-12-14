@@ -10,15 +10,18 @@ import NotFoundView from './components/NotFoundView';
 const routers = [{
 	path: '/apply',
 	component: Apply,
+    meta: {description: '健康档案', auth: true}
 }, {
 	path: '/bar',
 	component: Bar,
-    meta: {description: '健康档案', auth: true}
+    meta: {description: '健康档案', auth: false}
 }, {
 	path: '/combine',
-	component: Combine
+	component: Combine,
+    meta: {description: '健康档案', auth: false}
 }, {
-	path: '/memberlist',
+	name: 'memberlist',
+	path: '/memberlist/:code',
 	component: MemberList
 }, {
 	path: '/user/:id',

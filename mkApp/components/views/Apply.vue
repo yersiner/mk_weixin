@@ -1,13 +1,13 @@
 <template>
   <div class="apply">
-      <div v-show="true" class="applyform">
+      <div v-show="status === -1 || status === 2" class="applyform">
           <div class="pane pt">
               <div class="weui-cells__title title clt">基本信息</div>
               <div class="weui-cells weui-cells_form">
                   <div class="weui-cell">
                       <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
                       <div class="weui-cell__bd">
-                          <input class="weui-input" placeholder="请输入姓名"/>
+                          <input v-model="name" class="weui-input" placeholder="请输入姓名"/>
                       </div>
                   </div>
                   <div class="weui-cell">
@@ -15,7 +15,7 @@
                           <label class="weui-label">手机号</label>
                       </div>
                       <div class="weui-cell__bd">
-                          <input class="weui-input" type="tel" placeholder="请输入手机号"/>
+                          <input @keyup="checkTel" v-model="phone" class="weui-input" type="number" placeholder="请输入手机号"/>
                       </div>
                   </div>
                   <a  @click="showCity()" class="weui-cell weui-cell_access" href="javascript:;">
@@ -39,7 +39,7 @@
                           <label class="weui-label">住址</label>
                       </div>
                       <div class="weui-cell__bd">
-                          <input class="weui-input" type="tel" placeholder="请输入手机号"/>
+                          <input v-model='fullAddress' class="weui-input" type="tel" placeholder="请输入住址"/>
                       </div>
                   </div>
               </div>
@@ -47,55 +47,28 @@
           <div class="pane">
               <div class="weui-cells__title title">重点标记人群(多选)</div>
               <div class="weui-cells weui-cells_checkbox">
-                <label class="weui-cell weui-check__label" for="s11">
+                <label @click="toggleItem(disease, disease.checked)" v-for="(disease,index) in diseaseNum" class="weui-cell weui-check__label" :for="disease.id">
                     <div class="weui-cell__bd">
-                        <p>糖尿病</p>
+                        <p>{{disease.name}}</p>
                     </div>
                     <div class="weui-cell__hd">
-                        <input type="checkbox" class="weui-check" name="checkbox1" id="s11" checked="checked">
-                        <i class="weui-icon-checked"></i>
-                    </div>
-                </label>
-                <label class="weui-cell weui-check__label" for="s12">
-                    <div class="weui-cell__bd">
-                        <p>高血压</p>
-                    </div>
-                    <div class="weui-cell__hd">
-                        <input type="checkbox" class="weui-check" name="checkbox2" id="s12" checked="checked">
-                        <i class="weui-icon-checked"></i>
-                    </div>
-                </label>
-                <label class="weui-cell weui-check__label" for="s13">
-                    <div class="weui-cell__bd">
-                        <p>老年人</p>
-                    </div>
-                    <div class="weui-cell__hd">
-                        <input type="checkbox" class="weui-check" name="checkbox3" id="s13" >
-                        <i class="weui-icon-checked"></i>
-                    </div>
-                </label>
-                <label class="weui-cell weui-check__label" for="s14">
-                    <div class="weui-cell__bd">
-                        <p>孕妇</p>
-                    </div>
-                    <div class="weui-cell__hd">
-                        <input type="checkbox" class="weui-check" name="checkbox4" id="s14" >
+                        <input v-model="disease.checked" type="checkbox" class="weui-check" name="checkbox1" :id="disease.id">
                         <i class="weui-icon-checked"></i>
                     </div>
                 </label>
             </div>
           </div>
-          <a href="javascript:;" class="weui-btn weui-btn_plain-default submit-button">提交</a>
+          <a @click="submit" href="javascript:;" class="weui-btn weui-btn_plain-default submit-button">提交</a>
           <vue-pickers :hide="onceShow" :show="showPickCity"
           :selectData="pickCityData"
           v-on:cancel="closeCity"
           v-on:confirm="confirmCity"></vue-pickers>
           <vue-pickers :hide="onceShowList" :show="showPickList"
-          :selectData="pickList"
+          :selectData="HostList"
           v-on:cancel="closeList"
           v-on:confirm="confirmList"></vue-pickers>
       </div>
-      <div v-show="false" class="apply-success">
+      <div v-show="status === 1" class="apply-success">
           <div class="icon-box box-wrap">
               <i class="weui-icon-success weui-icon_msg theme"></i>
               <div class="icon-box__ctn">
@@ -104,7 +77,7 @@
               </div>
           </div>
       </div>
-      <div v-show="false" class="apply-error">
+      <div v-show="status === 3" class="apply-error">
         <div class="icon-box box-wrap">
           <div class="icon-box__ctn">
               <p class="icon-box__desc ao-desc fw ag">您提交的签约申请未获通过，原因如下：</p>
@@ -120,36 +93,71 @@
 
 <script>
   import VuePickers from '~/mkApp/widget/picker'
+  import { mapState } from 'vuex'
   import {provs_data, citys_data, dists_data} from '~/mkApp/utils/areaData.js'
   export default {
     name: "Foo",
     components: {
       VuePickers
     },
+    asyncData({store, route}) {
+      //获取医院列表
+      store.dispatch('fetchHospitalList');
+      //store.dispatch('fetchApplyStatus');
+      return store.dispatch('fetchApplyStatus').then((res)=>{
+        //获取签约的状态
+        let status = res.data.obj.status
+        store.commit('updateStatus', {status: status})
+      })
+    },
+    computed: mapState([
+      // map this.count to store.state.count
+      'HostList',
+      'openId',
+      'status'
+    ]),
     data() {
       return {
-        section: 'test Blue',
+        name: 'gyfnice',
+        phone:'13020003856',
+        province:'贵州',
+        city:'贵阳',
+        district:'观山湖',
+        fullAddress:'观山湖1号',
+        diseaseNum: [
+          {
+            name:'糖尿病',
+            id: 's1',
+            value: 0,
+            checked: false
+          },
+          {
+            name:'高血压',
+            id: 's2',
+            value: 1,
+            checked: true
+          },
+          {
+            name:'脑梗',
+            id: 's3',
+            value: 2,
+            checked: false
+          },
+          {
+            name:'其他',
+            id: 's4',
+            value: 3,
+            checked: false
+          },
+        ], //病种
+        doctorId: '',
+        hospitalId: '5a28ad70f11d1263b832bf24',
         selectCity: '请选择',
         selectHot: '请选择',
         showPickCity: false,
         showPickList: false,
         onceShow: false,
         onceShowList: false,
-        pickList: {
-          columns: 1,
-          pData1: [{
-              text: 1999,
-              value: 1999
-            },
-            {
-              text: 2001,
-              value: 2001
-            },
-            {
-              text: 2002,
-              value: 2002
-            }]
-        },
         pickCityData: {
           columns: 3,
           link: true,
@@ -160,6 +168,33 @@
       }
     },
     methods: {
+      checkTel(event) {
+        if(this.phone.length > 11) {
+          this.phone = this.phone.slice(0, 11);
+        }
+      },
+      toggleItem(item, checked) {
+        item.checked = !item.checked;
+      },
+      submit() {
+         let data = {
+            openId: this.openId,
+            name: this.name,
+            phone: this.phone,
+            province: this.province,
+            city: this.city,
+            district: this.district,
+            fullAddress: this.fullAddress,
+            diseaseNum: this.diseaseNum.filter((item)=>{
+              if(item.checked) {
+                return true
+              }
+            }).map((item) => item.value),
+            doctorId: this.doctorId,
+            hospitalId: this.hospitalId
+         }
+         this.$store.dispatch('submitApply', data);
+      },
       closeList() {
         var me = this;
         setTimeout(() => {
@@ -168,7 +203,9 @@
         this.showPickList = false;
       },
       confirmList(data){
+        console.log(data);
         var str = `${data.select1.text}`
+        this.hospitalId = data.select1.value
         this.selectHot = str
         this.closeList();
       },
@@ -184,8 +221,11 @@
         this.showPickCity = false;
       },
       confirmCity(data) {
-        console.log(data);
-        var str = `${data.select1.text}-${data.select2.text}-${data.select3.text}`
+        this.province = data.select1.text
+        this.city = data.select2.text
+        this.district = data.select3.text
+
+        var str = `${this.province}-${this.city}-${this.district}`
         this.selectCity = str
         this.closeCity();
       },

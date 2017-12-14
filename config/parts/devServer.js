@@ -13,6 +13,7 @@ module.exports = (process) => ({
       },
       // 仅在语法有错误时 才会进行提示，减少不必要的控制台输出
       stats: "errors-only",
+      disableHostCheck: true,
       host: process.host,
       port: process.port
     }

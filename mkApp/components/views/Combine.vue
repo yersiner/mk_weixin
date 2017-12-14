@@ -4,15 +4,15 @@
           <div class="weui-cells weui-cells_form wrap">
               <div class="weui-cell weui-cell_vcode">
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="tel" placeholder="请输入医生为您创建的健康档案编号">
+                        <input v-model="healthCode" class="weui-input" type="tel" placeholder="请输入医生为您创建的健康档案编号">
                     </div>
                     <div class="weui-cell__ft">
-                        <button class="weui-vcode-btn">提交</button>
+                        <button @click="search()" class="weui-vcode-btn">提交</button>
                     </div>
                 </div>
           </div>
           <p class="tips"><span>•</span>请输入正确的编号</p>
-          <a href="javascript:;" class="weui-btn weui-btn_plain-default warn-button">没有档案编号？</a>
+          <router-link to="/apply" class="weui-btn weui-btn_plain-default warn-button">没有档案编号？</router-link>
       </div>
   </div>
 </template>
@@ -22,14 +22,29 @@
     name: "Combine",
     data() {
       return {
+        healthCode: 'K21b8078773',
         section: 'test Blue'
       }
     },
     methods: {
-      jump(t) {
-        console.log('jump--', t);
-        //this.$router.push({ name: 'user', params: { id: 123 }})
-        this.$router.push({ name: 'user', params: { id: 123 }})
+      search() {
+        this.$store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
+
+        this.$store.dispatch('bindHealthNum', this.healthCode).then((res)=>{
+           if(res.data.code !== 200) {
+             this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})   
+
+             this.$store.commit('updateLoadingStatus', {isLoading: true, type: 'error', text: res.data.msg})
+             setTimeout(()=>{
+                this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'error', text: res.data.msg})  
+             }, 800)
+             return;
+           }
+           this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})   
+
+           this.$router.push({ name: 'memberlist', params: { code: this.healthCode }})
+        })
+        
       }
     }
   }

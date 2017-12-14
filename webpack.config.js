@@ -25,6 +25,7 @@ const commonConfig = merge([{
 		// Entries have to resolve to files! They rely on Node
 		// convention by default so if a directory contains *index.js*,
 		// it resolves to that.
+		//disableHostCheck: true,
 		entry: {
 			app: [PATHS.app],
 		},
@@ -49,6 +50,7 @@ const commonConfig = merge([{
 			new webpack.WatchIgnorePlugin([
 				path.join(__dirname, "node_modules")
 			])
+
 		]
 	},
 	PartsImage.loadFonts({
