@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>血压数据统计</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../../public/stylesheets/weui.css">
+	<link rel="stylesheet" href="../../public/stylesheets/iconfont.css">
+	<style>
+	/*体征数据详情*/
+	*{
+		padding: 0;
+		margin: 0;
+	}
+	ul,li{
+		list-style: none;
+	}
+	a{text-decoration: none;}
+	input::-webkit-input-placeholder{
+		font-size: .3rem;
+		color: #D1DDE6;
+	}
+	i,em{
+		font-style: normal;
+	}
+	html{
+		height: 100%;
+		font-size: 50px;
+	}
+	body{
+		width: 100%;
+		height: 100%;
+		min-width: 320px;
+		max-width: 768px;
+		min-height: 100%;
+		font-size: .24rem;
+		/* font-family: "arial, helvetica, sans-serif,微软雅黑";*/
+		background: white;
+		color: #333333;
+		margin: 0 auto;
+		box-sizing: border-box;
+		position: relative;
+	}
+
+.phyDetail{
+	width: 100%;
+	height: 100%;
+}
+.preLoad {
+	/*visibility: hidden;*/
+}
+.phyDetail nav.avatorNav{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-flow: nowrap row;
+	padding-top:10px;
+	padding-bottom: 18px;
+}
+nav.avatorNav .avatorItem{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-flow: nowrap column;
+	font-size: 13px;
+	color: #8FACC8;
+}
+nav.avatorNav .avatorItem:nth-child(2){
+	padding: 0 44px;
+}
+.avatorItem img{
+	width: 52px;
+	height: 52px;
+	object-fit: cover;
+	border-radius: 100%;
+}
+nav.avatorNav .avatorItem.active{
+	color: #56E9FF;
+}
+.phyDetail nav.textNav{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding-left: 15px;
+}
+.phyDetail nav.textNav>p{
+	font-size: 15px;
+	color: #898EA6;
+	width: 88px;
+	text-align: center;
+	margin-left: 5px;
+}
+.phyDetail nav>p.active{
+	background: #38E6FF;
+	border-radius: 20px;
+	line-height: 36px;
+	color: white;
+	box-shadow: inset 0 0 10px #38E6FF;
+}
+.lineChart .chartDes,.tableDisplay header {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-flow: nowrap row;
+}
+.chartDes>p,.tableDisplay header>p{
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	color: #8FACC8;
+	font-weight: 500;
+}
+.lineChart .chartDes{
+	margin-top: 48px;
+}
+.phyUnit{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 15px;
+	font-size:12px;
+	color: #8FACC8;
+	margin-top: 10px;
+}
+.phyUnit .firstColor{
+	color: #C33834;
+}
+.phyUnit .secondColor{
+	color: #2F4554;
+}
+.phyUnit .thirhColor{
+	color:#61A0A8;
+}
+.phyUnit .fourColor{
+	color: #D48265;
+}
+.chartDes>p span:first-child,.tableDisplay header>p span:first-child{
+	font-size: 16px;
+}
+.chartDes>p span:last-child,.tableDisplay header>p span:last-child{
+	font-size: 48px;
+	transform: scale(1,1.2);
+	-ms-transform: scale(1,1.2);
+	-webkit-transform: scale(1,1.2);
+	-moz-transform: scale(1,1.2);
+	-o-transform: scale(1,1.2);
+	margin-top: 5px;
+}
+.lineChart{
+	width: 100%;
+	height: 100%;
+}
+.lineChart .chart{
+	width: inherit;
+	height: 40%;
+	position: relative;
+	margin-top: 25px;
+}
+.lineChart #chart{
+	/*width: inherit;*/
+	padding-right: 2%;
+	height: 100%;
+}
+.chart .low,.chart .hight{
+	position: absolute;
+	font-size: 12px;
+	color: #8FACC8;
+	left: 35px;
+}
+.chart .hight{
+	bottom:88%;
+}
+.chart .low{
+	bottom: 38%;
+}
+.hide{
+	display: none!important;
+}
+#tableItem{
+	padding-bottom: 15px;
+}
+.tableDisplay header{
+	margin-top: 20px;
+}
+.tableList{
+	margin-top: 15px;
+}
+.tableList h3{
+	background: #E9F0F5;
+	line-height: 2;
+	padding-left: 15px;
+	font-size: 16px;
+	color: #898EA6;
+}
+.tableList h3 span{
+	padding-left: 5px;
+}
+.tableList p{
+	font-size: 15px;
+	color: #898EA6;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px 15px 0 30px;
+}
+.isHeight{
+	color:#FD5EA1;;
+}
+.isLow{
+	color: #FCD210;;
+}
+.tableList p span em:last-child{
+	margin-left: 15px;
+}
+	</style>
+</head>
+<body>
+	 <div class="phyDetail preLoad">
+       <nav class="avatorNav">
+           <div class="avatorItem" data-type="" data-id="">
+               <img src="../../public/img/me_default@1x.png">
+               <span>龚一峰</span>
+           </div>
+           <div class="avatorItem " data-type="" data-id="">
+               <img src="../../public/img/me_default@1x.png">
+               <span>陈浪</span>
+           </div>
+           <div class="avatorItem " data-type="" data-id="">
+               <img src="../../public/img/me_default@1x.png">
+               <span>朱龙</span>
+           </div>
+       </nav>
+       <nav class="textNav">
+           <p class="active" data-blind=".lineChart">折线图</p>
+           <p data-blind=".tableDisplay">表格</p>
+       </nav>
+       <!--折线图-->
+       <section class="lineChart ">
+           <section class="chart">
+                <div id="chart"></div>
+             	<!-- <div class="phyUnit">
+             	                   <p>收缩压 : <span class="firstColor">mmHg</span></p>
+             	                   <p>舒张压 : <span class="secondColor">mmHg</span></p>
+             	                   <p>心率 : <span class="thirhColor">次/分</span></p>
+             	                   <p>血糖 : <span class="fourColor">mmol/L</span></p>
+             	               </div> -->
+           </section>
+           <section class="chartDes timeStatic">
+               <p><span>正常次数</span><span class="numberIsNormal">0</span></p>
+               <p><span>偏高</span><span class="numberIsHeight">5</span></p>
+               <p><span>偏低</span><span class="numberIsLow">2</span></p>
+           </section>
+       </section>
+       <!--表格 hide-->
+       <section class="tableDisplay hide timeStatic">
+            <header>
+                <p><span>正常次数</span><span class="numberIsNormal">5</span></p>
+                <p><span>偏高</span><span class="numberIsHeight">0</span></p>
+                <p><span>偏低</span><span class="numberIsLow">2</span></p>
+            </header>
+         <section id="tableItem">
+        <section class="tableList">
+                 <h3><img src="../../public/img/icon_Star.png"><span>2017/12/12</span> </h3>
+                 <p>
+                   <span>
+                       <em>130/80mmHg</em>
+                       <em >偏高</em>
+                   </span>
+                    <span>03:12</span>
+                 </p>
+                 <p>
+                   <span class="isHeight">
+                       <em>130/80mmHg</em>
+                       <em >偏高</em>
+                   </span>
+                     <span>03:12</span>
+                 </p>
+             </section>
+             <section class="tableList">
+                 <h3><img src="../../public/img/icon_Star.png"><span>2017/12/12</span> </h3>
+                 <p>
+                   <span class="isLow">
+                       <em>130/80mmHg</em>
+                       <em >偏高</em>
+                   </span>
+                     <span>03:12</span>
+                 </p>
+                 <p>
+                   <span class="isHeight">
+                       <em>130/80mmHg</em>
+                       <em >偏高</em>
+                   </span>
+                     <span>03:12</span>
+                 </p>
+             </section>
+         </section>
+       </section>
+   </div>
+</body>
+</html>
+<script src="../../public/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../public/js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../public/js/zepto_touch.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../public/js/zepto_animate.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../public/js/zepto_ajax.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../public/js/zepto_event.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../public/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="../../public/js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/template" id="template">
+    <section class="tableList">
+        <h3><img src="../../public/img/icon_Star.png"><span>{{time}}</span> </h3>
+        {{html}}
+    </section>
+</script>
+<script type="text/template" id="templateChild">
+    <p>
+        <span class="{{style}}">
+            <em>{{type}}</em>
+        <em>{{unit}}</em>
+        <em>{{isNormal}}</em>
+        </span>
+        <span>{{lowTime}}</span>
+    </p>
+</script>
+<script type="text/template" id="templateAvator">
+    <div class="avatorItem" data-type="{{relation}}" data-id="{{user_id}}">
+        <img src="{{src}}">
+        <span>{{nickName}}</span>
+    </div>
+</script>
+
+<script>
+    (function (doc) {
+        //echart 图表
+        var lineChart = echarts.init(doc.getElementById("chart"));
+        var openId = getCookie("openId");
+        var option = {
+        	color:['#CAB1FF', '#FF8E94','#64B3F9', '#6DDACB','#FFBF67'],
+            tooltip: {
+                trigger: 'axis',
+               /* formatter : "90/140",*/
+                borderColor : "#000",
+                backgroundColor:"#D1DDE6",
+                textStyle:{
+                    color : "#fff",
+                },
+                axisPointer:{
+                    lineStyle :{
+                        color:"#38E6FF"
+                    }
+                },
+                alwaysShowContent:true
+            },
+            legend :{
+                data:['收缩压','舒张压','心率','血糖','血氧'],
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true,
+                show: true,
+                borderWidth: 0,
+                borderColor:"#D1DDE6",
+                backgroundColor: '#fff',
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLine:{
+                    lineStyle:{
+                        color : "#D1DDE6"
+                    }
+                },
+                axisLabel:{
+                    color : "#898EA6",
+                    fontSize : 14
+                },
+                data: ['12日','13日','14日','15日','16日','17日']
+            },
+            yAxis: {
+                type: 'value',
+                show:true,
+                axisLine:{
+                    show:false,
+                    lineStyle:{
+                        color : "#D1DDE6"
+                    }
+                },
+                axisLabel:{
+                    color : "#898EA6",
+                    fontSize : 14
+                },
+              // data: ['0','60','90','140','200']
+                // containLabel:false
+            },
+            series:[
+                            {
+                                name : '收缩压',
+                                type : 'line',
+                                data:[60,62,65,68,68,66,63]
+                            },{
+                                name :'舒张压',
+                                type:'line',
+                              
+                                data:[70,75,75,75,72,74]
+                            },
+                            {
+                                name:'心率',
+                                type:'line',
+                               
+                                data:[80,88,86,82,85,81]
+                            },
+                            {
+                                name:'血糖',
+                                type:'line',
+                                
+                                data:[90,91,95,94,100,98]
+                            },{
+                                name:'血氧',
+                                type:'line',
+                               
+                                data:[109,112,111,110,102,108]
+                            }
+                        ]
+        };
+    lineChart.setOption(option);
+    })(document)
+
+</script>

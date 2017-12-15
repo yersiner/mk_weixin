@@ -433,10 +433,11 @@ body{
 	position: absolute;
 	left: 0;
 	top: 0;
-	margin: 20px 12px 0 12px;
+	/* margin: 20px 12px 0 12px; */
+	padding: 20px 12px 0 12px;
 	box-sizing: border-box;
 	height: 100%;
-	width: calc(100% - 24px);
+	/* width: calc(100% - 24px); */
 	z-index: 2;
 }
 .medicalContent .contentTitle{

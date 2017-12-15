@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>健康档案</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link rel="stylesheet" href="../../public/stylesheets/weui.css">
+	<link rel="stylesheet" href="../../public/stylesheets/iconfont.css">
+	<style>
+	*{
+		padding: 0;
+		margin: 0;
+	}
+	ul,li{
+		list-style: none;
+	}
+	a{text-decoration: none;}
+	input::-webkit-input-placeholder{
+		font-size: .3rem;
+		color: #D1DDE6;
+	}
+	i,em{
+		font-style: normal;
+	}
+	html{
+		height: 100%;
+		font-size: 50px;
+	}
+	body{
+		width: 100%;
+		height: 100%;
+		min-width: 320px;
+		max-width: 768px;
+		min-height: 100%;
+		font-size: .24rem;
+		/* font-family: "arial, helvetica, sans-serif,微软雅黑";*/
+		background: white;
+		color: #333333;
+		margin: 0 auto;
+		box-sizing: border-box;
+		position: relative;
+	}
+		/*电子病历*/
+		.medicalBox{
+	height: 100%;
+	width: 100%;
+	background: #F8F9FB;
+	position: relative;
+}
+.medicalTop{
+	height: 105px;
+	background: #7FBDFF;
+}
+.medicalContent{
+	position: absolute;
+	left: 0;
+	top: 0;
+	margin: 20px 12px 0 12px;
+	box-sizing: border-box;
+	height: 100%;
+	width: calc(100% - 24px);
+	z-index: 2;
+}
+.medicalContent .contentTitle{
+	height:85px;
+	border-top-left-radius: 40px;
+	border-top-right-radius: 40px;
+	background: #99CAFF;
+	display: flex;
+	flex-flow:column nowrap;
+	justify-content: center;
+	align-items: center;
+	color: #FFFFFF;
+	background: rgba(255,255,255,0.2);
+	box-shadow: 0 0 5px #73b7ff;
+	position: relative;
+}
+.contentTitle .decoration{
+	position: absolute;
+	bottom: -7px;
+	left: 0;
+	z-index: 8;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+.contentTitle .decoration>img:nth-child(1){
+	margin-right: 30px;
+}
+.contentTitle .decoration>img:nth-child(2){
+	margin-left: 30px;
+}
+.medicalContent .contentTitle h2{
+	color: inherit;
+	font-size: .4rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: normal;
+	cursor: pointer;
+}
+.medicalContent .contentTitle h2 img{
+	margin-left: 20px;
+}
+.contentTitle p span{
+	font-size: .28rem;
+	color: inherit;
+	line-height:2;
+}
+.contentTitle p{
+	position: relative;
+}
+.contentTitle p:after,.contentTitle p:before{
+	content: "";
+	height:4px;
+	width: 4px;
+	border-radius: 100%;
+	background: white;
+}
+.contentTitle p:after{
+	position: absolute;
+	left: -10px;
+	top: 12px;
+}
+.contentTitle p:before{
+	position: absolute;
+	right: -10px;
+	top: 12px;
+}
+.contentTitle p span:nth-child(2){
+	margin:0 20px;
+}
+.medicalContent .contentText{
+	border-bottom-left-radius: 40px;
+	border-bottom-right-radius: 40px;
+	width: 100%;
+	background: white;
+	box-shadow: 0 0 5px #dbe1e3;
+	position: relative;
+}
+.itemText{
+	padding-top: 20px;
+}
+.itemText .tabNav{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 15px;
+	padding-right: 35px;
+	cursor: pointer;
+}
+.itemText .tabNav>span{
+	display: flex;
+	height: .48rem;
+	width: 1.44rem;
+	border-radius: .24rem;
+	text-align: center;
+	vertical-align: middle;
+	box-shadow: inset 0 0 5px #d3d7da;
+	background: #E9F0F5;
+	justify-content: center;
+	align-items: center;
+	font-size: .32rem;
+	color: #7FBDFF;
+}
+.itemText>p{
+	margin: 0 35px;
+	padding-top: 10px;
+	font-size: .28rem;
+	color: #898EA6;
+	display: -webkit-box;
+	-webkit-line-clamp:1;
+	-webkit-box-orient: vertical;
+	-ms-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	line-height: 1.2;
+	text-align: justify;
+}
+.itemText>p.active{
+	display: inline-block;
+}
+.dialogue.itemText .tabNav>span{
+	background: #FCD210;
+	color: white;
+}
+.dialogue.itemText{
+	margin-top: 15px;
+	padding-top: 15px;
+	border-top: 2px solid #E9F0F5;
+}
+.dialogue.itemText>p{
+	-webkit-line-clamp:5;
+	padding-bottom: 100px;
+}
+.contentText>img{
+	position: absolute;
+	bottom: 0;
+	right: -1px;
+}
+.medicalBox .markDrop{
+	position:fixed;
+	height:inherit;
+	width: inherit;
+	background: rgba(0,0,0,0.30);
+	bottom: 0;
+	left: 0;
+	z-index: 100000;
+}
+.markDrop .dropContent{
+	background: #FAFBFD;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+}
+.dropContent .selectItem p{
+	font-size: .32rem;
+	color: #7FBDFF;
+	text-align: center;
+	background: white;
+	line-height: 2;
+}
+.dropContent .selectItem{
+	padding-top: 11px;
+	cursor: pointer;
+}
+.dropContent .selectItem:last-child{
+	padding-bottom: 11px;
+}
+.dropContent .selectItem:last-child p{
+	color: #FD5EA1;;
+}
+	</style>
+</head>
+<body>
+	<section class="medicalBox" style="">
+		<div class="medicalTop"></div>
+		<div class="medicalContent">
+			<div class="contentTitle">
+				<h2><span>谢复先（父亲）</span><img src="../../public/img/arrow_icon_white.png"></h2>
+				<p>
+					<span>男</span>
+					<span>60岁</span>
+					<span>15320799781</span>
+				</p>
+				<div class="decoration">
+					<img src="../../public/img/rot.png">
+					<img src="../../public/img/rot.png">
+				</div>
+			</div>
+			<div class="contentText">
+				<div class="itemText">
+					<div class="tabNav">
+						<span>现病情</span><img src="../../public/img/arrow_icon.png">
+					</div>
+					<p id="illness">有无患过传染病，地方病和其他疾病，发病目前的概率是多大</p>
+				</div>
+				<div class="itemText">
+					<div class="tabNav">
+						<span>即往史</span><img src="../../public/img/arrow_icon.png">
+					</div>
+					<p id="always">有无患过传染病，地方病和其他疾病，发病目前的概率是多大</p>
+				</div>
+				<div class="itemText">
+					<div class="tabNav">
+						<span>家族历</span><img src="../../public/img/arrow_icon.png">
+					</div>
+					<p id="familys">有无患过传染病，地方病和其他疾病，发病目前的概率是多大</p>
+				</div>
+				<div class="itemText dialogue">
+					<div class="tabNav">
+						<span>诊断</span><img src="../../public/img/arrow_icon.png">
+					</div>
+					<p id="record_des">温度36.3℃，脉搏21/次，血压115/80 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero debitis ipsa dolorum fugiat quae ea quaerat adipisci unde, ducimus modi tenetur libero quidem tempora cupiditate voluptatibus labore neque reiciendis culpa.</p>
+				</div>
+				<!--底部翻页特效-->
+				<img src="../../public/img/bookmark.png">
+			</div>
+		</div>
+<!--弹出框-->
+		<div class="markDrop" style="display: none;">
+			<div class="dropContent">
+				<div class="selectItem">
+					<p>常晴（母亲）</p>
+				</div>
+				<div class="selectItem">
+					<p>王粲袄（自己）</p>
+				</div>
+				<div class="selectItem" data-type="999">
+					<p>取消</p>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
