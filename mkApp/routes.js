@@ -2,21 +2,30 @@
 const Apply = () => import ('./components/views/Apply.vue');
 const Combine = () => import ('./components/views/Combine.vue');
 const MemberList = () => import ('./components/views/MemberList.vue');
+const Deal = () => import ('./components/views/Deal.vue');
+const Reject = () => import ('./components/views/Reject.vue');
 
-import Bar from './components/views/Bar';
 import User from './components/views/User';
 import NotFoundView from './components/NotFoundView';
 
 const routers = [{
 	path: '/apply',
 	component: Apply,
-    meta: {title: '申请签约家庭医生', auth: false}
+	name: 'apply',
+    meta: {title: '申请签约家庭医生', auth: true}
 }, {
-	path: '/bar',
-	component: Bar,
-    meta: {title: '健康档案', auth: false}
+	path: '/reject',
+	name: 'reject',
+	component: Reject,
+    meta: {title: '签约信息', auth: false}
+}, {
+	path: '/deal',
+	name: 'deal',
+	component: Deal,
+    meta: {title: '签约信息', auth: false}
 }, {
 	path: '/combine',
+	name: 'combine',
 	component: Combine,
     meta: {title: '绑定健康档案', auth: false}
 }, {

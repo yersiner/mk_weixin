@@ -64,10 +64,11 @@
     },
     asyncData({store, route}) {
       var me = this;
-      return store.dispatch('fetchMemberList').then(()=>{
+      return store.dispatch('fetchMemberList').catch(()=>{
          //me.selectMember = me.MemberList.pData1[0].name
          //debugger;
          //store.dispatch('fetchDoctorGuides') //查询该成员的随访信息
+         console.log('error---');
       })
     },
     mounted () {

@@ -35,6 +35,7 @@ export default {
     console.log(options);
     let weChatAuth = new WeChatAuth(options)
     let router = options.router
+    let store = options.store
     if (!router) return false
 
     function urlCodeQueryFilter (code) {
@@ -65,7 +66,7 @@ export default {
       if (!code && !checkRouterAuth(to, from, next)) {
         return false
       }
-      next()
+      next();
     }
 
     router.beforeEach((to, from, next) => {

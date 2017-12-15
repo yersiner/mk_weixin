@@ -18,7 +18,8 @@ function request(method, url, data = null) {
 	return axios({
 		method,
 		url,
-		data
+		data,
+		timeout: 5000
 	})
 }
 
@@ -196,6 +197,7 @@ export default new Vuex.Store({
 	    },
 	    updateStatus(state, payload) {
 	    	state.status = payload.status
+	    	//localStorage.setItem('status', payload.status)
 	    },
 	    updateOpenId(state, payload) {
 	    	console.log(payload);
