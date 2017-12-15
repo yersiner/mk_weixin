@@ -22,6 +22,41 @@ function request(method, url, data = null) {
 	})
 }
 
+
+var Mdata = [{
+	doctorName:'gyfnice', //str #医生姓名
+	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
+	suggest:'yuyuyu', //#建议
+	times:'1122121' //#时间
+}, {
+	doctorName:'gyfnice', //str #医生姓名
+	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
+	suggest:'yuyuyu', //#建议
+	times:'1122121' //#时间
+},{
+	doctorName:'gyfnice', //str #医生姓名
+	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
+	suggest:'yuyuyu', //#建议
+	times:'1122121' //#时间
+},{
+	doctorName:'gyfnice', //str #医生姓名
+	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
+	suggest:'yuyuyu', //#建议
+	times:'1122121' //#时间
+},{
+	doctorName:'gyfnice', //str #医生姓名
+	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
+	suggest:'yuyuyu', //#建议
+	times:'1122121' //#时间
+}]
+
+axios.interceptors.response.use(response => response, (error) => {
+	console.log('数据加载出错');
+	//alert('后端加载出错');
+	Promise.resolve(error.response)
+})
+
+
 export default new Vuex.Store({
 	state: {
 		isLoading: {
@@ -36,7 +71,15 @@ export default new Vuex.Store({
 			columns: 1,
 			pData1: []
 		},
-		MemberList: []
+		MemberList: {
+			columns: 1,
+			pData1: []
+		},
+		MemberInfoList: [],
+		selectMember: {
+			name: '',
+			user_id: '',
+		}
 	},
 	actions: {
 		fetchApplyStatus({commit, state, dispatch}) {
@@ -50,15 +93,41 @@ export default new Vuex.Store({
 				healthNum: info
 			})
 		},
-		fetchMemberList({commit}, info) {
+		fetchDoctorGuides({commit}, payload) {
+			return request('post', '/weichat/getDoctorGuides', {
+			    userId:payload.user_id, //#成员id(其他地方为user_id)
+			    pageIndex:payload.currentPage, //#当前页
+			    pageSize:8 //#每页记录数
+			})
+		},
+		fetchMemberList({commit, state, dispatch}, info) {
 			//获取家庭成员档案信息
-			return new Promise((resolve, reject) => {
-			      setTimeout(() => {
-			      	console.log(888888888);
-			        //commit('someMutation')
-			        resolve()
-			      }, 1000)
-		    })
+			return request('post', '/weichat/getFamilyMembers', {
+				openId: state.openId,
+			}).then((res)=> {
+				console.log('加载家庭成员档案信息', res);
+				commit('updateMemberList', res.data.obj);
+
+				//查询该成员的随访信息
+				dispatch('fetchDoctorGuides', {
+					user_id: state.selectMember.user_id,
+					currentPage: 1
+				}).then((res) => {
+					console.log('成员的随访信息--->', res);
+					commit('updateMemberInfoList', {
+						current: false,
+						...res.data.obj
+					});
+				})
+			})
+
+			//return new Promise((resolve, reject) => {
+			//      setTimeout(() => {
+			//      	console.log(888888888);
+			//        //commit('someMutation')
+			//        resolve()
+			//      }, 1000)
+		    //})
 		},
 		fetchHospitalList({commit}) {
 			//获取医院列表信息
@@ -68,7 +137,7 @@ export default new Vuex.Store({
 				commit('updateHostList', res.data.obj)
 			})
 		},
-		submitApply({commit}, data) {
+		submitApply({commit, dispatch}, data) {
       		commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在提交'})
 
 			return request('post', '/weichat/applySign', data).then((res) => {
@@ -76,10 +145,14 @@ export default new Vuex.Store({
 				let data = res.data;
 				if(data.code === 200) {
       				commit('updateStatus', {
-      					status: data.obj.status
+      					status: data.obj.status || 1
       				})
 				}
 			}).catch(() => {
+				dispatch('displayErrorLoad', {
+					load: '正在提交',
+					errorInfo: '提交失败'
+				});
 				console.log('请求失败');
 			})
 		},
@@ -90,6 +163,13 @@ export default new Vuex.Store({
 		},
 		loadCaptcha() {
 			//return api.request('get', config.getURL('login/captcha'))
+		},
+		displayErrorLoad({commit}, payload) {
+			commit('updateLoadingStatus', {isLoading: false, type: 'load', text: payload.load})
+			commit('updateLoadingStatus', {isLoading: true, type: 'error', text: payload.errorInfo})
+			setTimeout(()=>{
+				commit('updateLoadingStatus', {isLoading: false, type: 'error', text: payload.errorInfo})
+			}, 800)
 		}
 	},
 	mutations: {
@@ -112,7 +192,7 @@ export default new Vuex.Store({
 	    	  	 value: item._id
 	    	  })
 	    	}
-	    	console.log(state.HostList.pData1);
+	    	//console.log(state.HostList.pData1);
 	    },
 	    updateStatus(state, payload) {
 	    	state.status = payload.status
@@ -120,6 +200,27 @@ export default new Vuex.Store({
 	    updateOpenId(state, payload) {
 	    	console.log(payload);
 	    	state.openId = payload.openId;
+	    },
+	    updateMemberList(state, payload) {
+	    	var list = payload.list
+	    	for(var item of list) {
+	    		state.MemberList.pData1.push({
+	    			text: item.name,
+	    			value: item.user_id
+	    		})
+	    	}
+	    	state.selectMember.name = list[0].name;
+	    	state.selectMember.user_id = list[0].user_id;
+	    },
+	    updateMemberInfoList(state, payload) {
+	    	var list = payload.list;
+	    	if(!payload.current) {
+	    		console.log('clear list');
+	    		state.MemberInfoList = [];
+	    	}
+	    	for(var item of list) {
+	    		state.MemberInfoList.push(item)
+	    	}
 	    }
 	},
 	getters: {

@@ -10,6 +10,26 @@ import WeChatAuth from './wechat-auth'
 import url from 'url'
 import querystring from 'querystring'
 
+
+//const setWechatTitle = function(title) {
+//    document.title = title;
+//    let mobile = navigator.userAgent.toLowerCase();
+//    if (/iphone|ipad|ipod/.test(mobile)) {
+//        let iframe = document.createElement('iframe');
+//        iframe.style.visibility = 'hidden';
+//        // 替换成站标favicon路径或者任意存在的较小的图片即可
+//        iframe.setAttribute('src', '//m.baidu.com/favicon.ico');
+//        let iframeCallback = function() {
+//            setTimeout(function() {
+//                iframe.removeEventListener('load', iframeCallback)
+//                document.body.removeChild(iframe)
+//            }, 10)
+//        };
+//        iframe.addEventListener('load', iframeCallback)
+//        document.body.appendChild(iframe)
+//    }
+//};
+
 export default {
   install (Vue, options) {
     console.log(options);
@@ -41,6 +61,7 @@ export default {
       let query = querystring.parse(url.parse(window.location.href).query)
       let code = query.code
       urlCodeQueryFilter(code)
+      //setWechatTitle(to.meta.description);
       if (!code && !checkRouterAuth(to, from, next)) {
         return false
       }

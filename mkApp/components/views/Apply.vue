@@ -97,6 +97,9 @@
   import {provs_data, citys_data, dists_data} from '~/mkApp/utils/areaData.js'
   export default {
     name: "Foo",
+    beforeCreate() {
+
+    },
     components: {
       VuePickers
     },

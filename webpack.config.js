@@ -10,7 +10,7 @@ const PartsJs = require("./config/parts/loadJavaScript.js");
 
 const PATHS = {
 	app: path.join(__dirname, "mkApp"), //入口文件地址
-	build: path.join(__dirname, "build") //导出文件地址
+	build: path.join(__dirname, "public", "mkpublic") //导出文件地址
 };
 
 const isVendor = function(module) {
@@ -32,7 +32,7 @@ const commonConfig = merge([{
 		output: {
 			path: PATHS.build,
 			chunkFilename: '[name].[hash].bundle.js',
-			publicPath: '/',
+			//publicPath: '/mkpublic/',
 			filename: "[name].[hash].js",
 		},
 		resolve: {

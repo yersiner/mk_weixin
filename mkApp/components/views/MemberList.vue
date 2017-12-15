@@ -4,7 +4,7 @@
           <div class="weui-tab">
               <a @click="showList()" class="weui-cell weui-cell_access top-head" href="javascript:;">
                   <div class="weui-cell__bd item">
-                      <p>{{code}}---{{selectMember}}</p>
+                      <p>{{selectMember.name}}</p>
                   </div>
                   <div class="weui-cell__ft" style="margin-right: 18px;">
                       <span>请选择</span>
@@ -22,16 +22,17 @@
                       :startY="parseInt(startY)"
                       @pullingUp="onPullingUp">
                   <div ref="list" class="weui-panel__bd">
-                      <div class="weui-media-box weui-media-box_text" :key="index" v-for="(item, index) in items">
-                          <h4 class="weui-media-box__title title"><span class="stat">★</span>{{item}}</h4>
-                          <p class="weui-media-box__desc desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+                      <div class="weui-media-box weui-media-box_text" :key="index" v-for="(item, index) in MemberInfoList">
+                          <h4 class="weui-media-box__title title"><span class="stat">★</span>
+                            {{item.times.$numberLong|prettyDate}} &nbsp&nbsp&nbsp {{item.doctorName}}医生</h4>
+                          <p class="weui-media-box__desc desc">{{item.desc}}</p>
                       </div>
                   </div>
               </vue-better-scroll>
           </div>
       </div>
        <vue-pickers :hide="onceShowList" :show="showPickList"
-          :selectData="pickList"
+          :selectData="MemberList"
           v-on:cancel="closeList"
           v-on:confirm="confirmList"></vue-pickers>
   </div>
@@ -40,18 +41,37 @@
 <script>
   import VuePickers from '~/mkApp/widget/picker'
   import VueBetterScroll from 'vue2-better-scroll'
+  import { mapState } from 'vuex'
+
   let count = 1;
   export default {
     name: "MemberList",
+    computed: {
+       totalCount() {
+           return count * 4
+       },
+       ...mapState([
+         // map this.count to store.state.count
+         'MemberInfoList',
+         'MemberList',
+         'selectMember',
+         'openId'
+       ])
+    },
     components: {
       VuePickers,
       VueBetterScroll
     },
     asyncData({store, route}) {
-      return store.dispatch('fetchMemberList', route.params.id)
+      var me = this;
+      return store.dispatch('fetchMemberList').then(()=>{
+         //me.selectMember = me.MemberList.pData1[0].name
+         //debugger;
+         //store.dispatch('fetchDoctorGuides') //查询该成员的随访信息
+      })
     },
     mounted () {
-      this.onPullingUp()
+      //this.onPullingUp()
     },
     data() {
       return {
@@ -71,24 +91,8 @@
         scrollToY: 0,
         scrollToTime: 700,
         items: [],
-        selectMember: '',
         showPickList: false,
         onceShowList: false,
-        pickList: {
-          columns: 1,
-          pData1: [{
-              text: 1999,
-              value: 1999
-            },
-            {
-              text: 2001,
-              value: 2001
-            },
-            {
-              text: 2002,
-              value: 2002
-            }]
-        },
         code: this.$route.params.code,
         section: 'test Blue'
       }
@@ -107,15 +111,22 @@
        })
       },
       onPullingUp () {
+        count++;
+        //console.log('0000--->count', count);
         // 模拟上拉 加载更多数据
-        console.log('上拉加载')
-        this.getData().then(res => {
-          this.items = this.items.concat(res)
-          if(count<50){
-            this.$refs.scroll.forceUpdate(true)
-          }else{
-            this.$refs.scroll.forceUpdate(false)
-          }
+        this.$store.dispatch('fetchDoctorGuides', {
+          user_id: this.selectMember.user_id,
+          currentPage: count
+        }).then((res) => {
+            this.$store.commit('updateMemberInfoList', {
+              current: true,
+              ...res.data.obj
+            });
+            if(count < res.data.obj.totalCount){
+              this.$refs.scroll.forceUpdate(true)
+            }else{
+              this.$refs.scroll.forceUpdate(false)
+            }
         })
       },
       closeList() {
@@ -127,7 +138,26 @@
       },
       confirmList(data){
         var str = `${data.select1.text}`
-        this.selectMember = str
+        if(str === this.selectMember.name) {
+          this.closeList();
+          console.log('same as name');
+          return;
+        }
+        this.selectMember.name = str
+        this.selectMember.id = data.select1.value
+
+        //查询该成员的随访信息
+        count = 0;
+        this.$refs.scroll.forceUpdate(true)
+        this.$store.dispatch('fetchDoctorGuides', {
+          user_id: this.selectMember.user_id,
+          currentPage: 1
+        }).then((res) => {
+          this.$store.commit('updateMemberInfoList', {
+            current: false,
+            ...res.data.obj
+          });
+        })
         this.closeList();
       },
       showList() {

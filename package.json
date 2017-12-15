@@ -5,7 +5,7 @@
   "main": "readme.js",
   "scripts": {
     "start": "webpack-dev-server --env development",
-    "build": "rm -rf ./build && webpack --env production"
+    "build": "rm -rf ./public/mkpublic && webpack --env production"
   },
   "repository": {
     "type": "git",
@@ -61,12 +61,14 @@
   "dependencies": {
     "axios": "^0.17.1",
     "babel-runtime": "^6.26.0",
+    "echarts": "^3.8.5",
     "fastclick": "^1.0.6",
     "formstream": "^1.1.0",
     "loadash": "^1.0.0",
     "sha1": "^1.1.1",
     "vue": "^2.5.9",
     "vue-router": "^3.0.1",
+    "vue-wechat-title": "^2.0.4",
     "vuex": "^3.0.1",
     "vux": "^2.7.4",
     "xml2js": "^0.4.16"

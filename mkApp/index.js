@@ -9,13 +9,23 @@ import routes from './routes'
 import lodash from 'lodash';
 import store from './store'
 
+//import echarts from 'echarts'
 
-Object.defineProperty(Vue.prototype, '$lodash', { value: lodash });
+//Object.defineProperty(Vue.prototype, '$lodash', { value: lodash });
 
 import WechatAuth from './utils/auth';
 
+// Import Helpers for filters
+import { prettyDate } from './filters'
+
+// Import Install and register helper items
+Vue.filter('prettyDate', prettyDate)
+
+
 const FastClick = require('fastclick')
 FastClick.attach(document.body)
+
+Vue.use(require('vue-wechat-title'))
 
 //require('es6-promise').polyfill()
 
@@ -80,6 +90,7 @@ router.beforeResolve((to, from, next) => {
       return next()
     }
     store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
+
     // 这里如果有加载指示器(loading indicator)，就触发
     Promise.all(activated.map(c => {
       if (c.asyncData) {
@@ -95,6 +106,13 @@ router.beforeResolve((to, from, next) => {
 
       next()
     }).catch(next)
+})
+
+
+router.afterEach(routes => {
+  if(typeof routes.meta.description !== undefined) {
+      console.log('-->', routes.meta.description);
+  }
 })
 
 new Vue({
