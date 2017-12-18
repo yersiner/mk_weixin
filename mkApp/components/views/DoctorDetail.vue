@@ -12,7 +12,7 @@
               </div>
               <div class="name">
                 <span></span>
-                <span>康怡灰</span>
+                <span>{{DoctorInfo.name}}</span>
                 <span></span>
               </div>
               <p class="des">主治医生</p>
@@ -126,25 +126,22 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   export default {
-    name: "user",
+    name: "DoctorDetail",
+    computed: mapState([
+      // map this.count to store.state.count
+      'DoctorInfo',
+      'openId',
+      'status'
+    ]),
+    asyncData({store, route}) {
+      return store.dispatch('fetchDoctorInfo')
+    },
     data() {
       return {
         title: 'userInfo'
       }
-    },
-    watch: {
-        '$route' (to, from) {
-          // react to route changes...
-          console.log('to', to);
-          console.log('from', from);
-        }
-    },
-    beforeRouteUpdate (to, from, next) {
-      // react to route changes...
-      // don't forget to call next()
-      console.log('before+from', from);
-      next();
     }
   }
 </script>
@@ -241,7 +238,6 @@
       align-items: center;
       webkit-align-items: center;
       padding-top: 12px;
-      padding-bottom: 10px;
     }
     .doctorName .name>span:nth-child(1),.doctorName .name>span:nth-child(3){
       height: 2px;

@@ -66,7 +66,29 @@ export default {
       if (!code && !checkRouterAuth(to, from, next)) {
         return false
       }
-      next();
+     //store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
+      
+     store.dispatch('fetchApplyStatus').then((res)=>{
+         //获取签约的状态
+         
+         let status = res.data.obj.status
+         console.log('获取签约的状态-gyf', status);
+         store.commit('updateStatus', {status: status})
+
+         if(to.name !== 'apply' && (status === -1 || status === 1 || status === 3)) {
+            next({path: '/apply'})
+         }else if(to.name === 'apply' && status === 2){
+            next({path: '/doctorDetail'})
+         }else {
+            next()
+         }
+
+     }).catch(()=>{
+        //alert('加载医院列表失败')
+        next();
+        console.log('加载签约信息失败');
+     });
+      
     }
 
     router.beforeEach((to, from, next) => {

@@ -59,6 +59,7 @@
       height: 32px;
       line-height: 32px;
       border-radius: 20px;
+      webkit-border-radius: 20px;
       margin-top: 30px;
       background: #E9F0F5;
       color: #8499A7;

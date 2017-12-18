@@ -14,6 +14,9 @@ import store from './store'
 //Object.defineProperty(Vue.prototype, '$lodash', { value: lodash });
 
 import WechatAuth from './utils/auth';
+import wxConfig from './utils/wx.config';
+
+//import wx from './utils/weixin';
 
 // Import Helpers for filters
 import { prettyDate } from './filters'
@@ -27,6 +30,8 @@ FastClick.attach(document.body)
 
 Vue.use(require('vue-wechat-title'))
 
+//require('./utils/weixin')
+
 //require('es6-promise').polyfill()
 
 // Routing logic
@@ -34,6 +39,9 @@ var router = new VueRouter({
   routes,
   linkActiveClass: "active"
 });
+
+//微信jssdk插件初始化
+wxConfig.init(store)
 
 // 微信授权插件初始化
 Vue.use(WechatAuth , {
@@ -59,6 +67,7 @@ Vue.use(WechatAuth , {
         })
         next(openid, {path: path});
     })
+
     //axios.get('通过code值换取access_token接口地址', {
     //  params: {
     //    code,
@@ -91,7 +100,6 @@ router.beforeResolve((to, from, next) => {
       return next()
     }
     store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
-
     // 这里如果有加载指示器(loading indicator)，就触发
     Promise.all(activated.map(c => {
       if (c.asyncData) {

@@ -1,0 +1,9 @@
+{
+	"code":200,
+    "msg":"请求成功",
+    "obj":{
+        "isApply":true,
+        "status":-1,
+        "desc":"还没有申请"
+    }
+}

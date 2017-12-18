@@ -1,62 +1,8 @@
-import axios from 'axios'
+import Api from '~/api/mkapi'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
-function request(method, url, data = null) {
-	console.log(url, data);
-	if (!method) {
-		console.error('API function call requires method argument')
-		return
-	}
-
-	if (!url) {
-		console.error('API function call requires url argument')
-		return
-	}
-
-	return axios({
-		method,
-		url,
-		data,
-		timeout: 5000
-	})
-}
-
-
-var Mdata = [{
-	doctorName:'gyfnice', //str #医生姓名
-	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
-	suggest:'yuyuyu', //#建议
-	times:'1122121' //#时间
-}, {
-	doctorName:'gyfnice', //str #医生姓名
-	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
-	suggest:'yuyuyu', //#建议
-	times:'1122121' //#时间
-},{
-	doctorName:'gyfnice', //str #医生姓名
-	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
-	suggest:'yuyuyu', //#建议
-	times:'1122121' //#时间
-},{
-	doctorName:'gyfnice', //str #医生姓名
-	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
-	suggest:'yuyuyu', //#建议
-	times:'1122121' //#时间
-},{
-	doctorName:'gyfnice', //str #医生姓名
-	desc:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque obcaecati earum in officia consequatur cumque molestiae, animi minus rerum ab. Sed veniam, molestias quidem voluptatem cum non pariatur. Similique, perferendis.',
-	suggest:'yuyuyu', //#建议
-	times:'1122121' //#时间
-}]
-
-axios.interceptors.response.use(response => response, (error) => {
-	console.log('数据加载出错');
-	//alert('后端加载出错');
-	Promise.resolve(error.response)
-})
-
 
 export default new Vuex.Store({
 	state: {
@@ -67,7 +13,7 @@ export default new Vuex.Store({
 			error: false
 		},
 		openId: localStorage.getItem('access_token') || '',
-		status: -1,
+		status: -10,
 		HostList: {
 			columns: 1,
 			pData1: []
@@ -80,22 +26,54 @@ export default new Vuex.Store({
 		selectMember: {
 			name: '',
 			user_id: '',
+		},
+		DoctorInfo: {
+			"name": "gyfnice",
+	        "phone": "18732323232",
+	        "avatar": "gyfnice",
+	        "sex":1111,    //性别 【-1:"未知"，1:"男"，2:"女"】
+	        "job_number":  "gyfnice",
+	        "education":  "gyfnice",
+	        "full_name":  "gyfnice",
+	        "profile":  "gyfnice",
+	        "visits_weeks":[]
 		}
 	},
 	actions: {
+		fetchDoctorInfo({commit, state, dispatch}) {
+			return Api.request('post', Api.getURL('weichat/dutyDoctorInfo'), {
+				openId: state.openId
+			}).then((res)=> {
+				commit('updateDoctorInfo', res.data.obj)
+			}).catch(()=>{
+				console.log('医生信息数据报错');
+			})
+		},
 		fetchApplyStatus({commit, state, dispatch}) {
-			return request('post', '/weichat/getApplyStatus', {
+			if(state.status !== -10) {
+				return new Promise((resolve, reject) => {
+				      resolve({
+				      	  data: {
+				      	  	 obj: {
+				      	  	 	status: state.status
+				      	  	 }
+				      	  }
+				      })
+			    })
+			}
+			//console.log('---status--->', state.status);
+			return Api.request('post', Api.getURL('weichat/getApplyStatus'), {
 				openId: state.openId
 			})
 		},
 		bindHealthNum({commit, state}, info) {
-			return request('post', '/weichat/bindHealthNum', {
+			return Api.request('post', Api.getURL('weichat/bindHealthNum'), {
 				openId: state.openId,
 				healthNum: info
 			})
 		},
 		fetchDoctorGuides({commit}, payload) {
-			return request('post', '/weichat/getDoctorGuides', {
+			return Api.request('post', Api.getURL('weichat/getDoctorGuides'), {
 			    userId:payload.user_id, //#成员id(其他地方为user_id)
 			    pageIndex:payload.currentPage, //#当前页
 			    pageSize:8 //#每页记录数
@@ -103,7 +81,7 @@ export default new Vuex.Store({
 		},
 		fetchMemberList({commit, state, dispatch}, info) {
 			//获取家庭成员档案信息
-			return request('post', '/weichat/getFamilyMembers', {
+			return Api.request('post', Api.getURL('weichat/getFamilyMembers'), {
 				openId: state.openId,
 			}).then((res)=> {
 				console.log('加载家庭成员档案信息', res);
@@ -130,9 +108,12 @@ export default new Vuex.Store({
 			//      }, 1000)
 		    //})
 		},
-		fetchHospitalList({commit}) {
+		fetchHospitalList({commit, state}) {
 			//获取医院列表信息
-			return request('post', '/weichat/getHospital', {
+			if(state.status !== -1) {
+				return;
+			}
+			return Api.request('post', Api.getURL('weichat/getHospital'), {
 				region_id: ''
 			}).then((res) => {
 				commit('updateHostList', res.data.obj)
@@ -141,7 +122,7 @@ export default new Vuex.Store({
 		submitApply({commit, dispatch}, data) {
       		commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在提交'})
 
-			return request('post', '/weichat/applySign', data).then((res) => {
+			return Api.request('post', Api.getURL('weichat/applySign'), data).then((res) => {
       			commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
 				let data = res.data;
 				if(data.code === 200) {
@@ -157,8 +138,11 @@ export default new Vuex.Store({
 				console.log('请求失败');
 			})
 		},
+		fetchWxauth({commit}) {
+			return Api.request('get', Api.getURL('api/jssdk'))
+		},
 		fetchOpenId({commit}, code) {
-			return request('post', '/api/getAuth', {
+			return Api.request('post', Api.getURL('api/getAuth'), {
 				code: code
 			})
 		},
@@ -211,6 +195,7 @@ export default new Vuex.Store({
 	    			value: item.user_id
 	    		})
 	    	}
+	    	console.log('9------>', state.MemberList.pData1);
 	    	state.selectMember.name = list[0].name;
 	    	state.selectMember.user_id = list[0].user_id;
 	    },
@@ -223,6 +208,9 @@ export default new Vuex.Store({
 	    	for(var item of list) {
 	    		state.MemberInfoList.push(item)
 	    	}
+	    },
+	    updateDoctorInfo(state, payload) {
+	    	state.DoctorInfo = Object.assign({}, state.DoctorInfo, payload)
 	    }
 	},
 	getters: {

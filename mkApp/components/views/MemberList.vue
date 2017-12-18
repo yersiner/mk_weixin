@@ -1,7 +1,7 @@
 <template>
   <div class="member-list">
       <div class="page__bd container" style="min-height: 100%;">
-          <div class="weui-tab">
+          <div class="weui-tab cpane">
               <a @click="showList()" class="weui-cell weui-cell_access top-head" href="javascript:;">
                   <div class="weui-cell__bd item">
                       <p>{{selectMember.name}}</p>
@@ -14,7 +14,7 @@
                   
               </a>
               <vue-better-scroll
-                  style="height:600px"
+                  style="min-height:500px"
                       class="wrapper"
                       :scrollbar="scrollbarObj"
                       ref="scroll"
@@ -45,7 +45,7 @@
 
   let count = 1;
   export default {
-    name: "MemberList",
+    name: "uioss",
     computed: {
        totalCount() {
            return count * 4
@@ -175,12 +175,20 @@
 </script>
 
 <style scoped>
+    .cpane {
+      display: flex;
+      display: -webkit-flex;
+      -webkit-flex-direction: column;
+    }
     .top-head {
+      height: 55px;
       position: relative;
       z-index: 10;
       background:white;
     }
     .wrapper {
+      flex:1;
+      webkit-flex:1;
       position: relative;
       z-index: 9;
     }
