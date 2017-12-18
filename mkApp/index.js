@@ -30,6 +30,9 @@ FastClick.attach(document.body)
 
 Vue.use(require('vue-wechat-title'))
 
+import Api from '~/api/mkapi'
+
+Api.interceptors(store)
 //require('./utils/weixin')
 
 //require('es6-promise').polyfill()

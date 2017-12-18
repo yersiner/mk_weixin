@@ -1,0 +1,51 @@
+{
+	"code": 200,
+	"msg": "请求成功",
+	"obj": {
+		"_id": "5a28ae7af11d1263807121b8",
+		"phone": "18085280111",
+		"name": "李时珍",
+		"avatar": null,
+		"sex": 1,
+		"job_number": "999",
+		"education": "硕士",
+		"desc": null,
+		"hospitalName": "贵州省贵阳市观山湖区金阳医院",
+		"visits_weeks": [{
+			"day": "1",
+			"forenoon": 0,
+			"at_noon": 0,
+			"evening": 0
+		}, {
+			"day": "2",
+			"forenoon": 0,
+			"at_noon": 0,
+			"evening": 0
+		}, {
+			"day": "3",
+			"forenoon": 0,
+			"at_noon": 0,
+			"evening": 0
+		}, {
+			"day": "4",
+			"forenoon": 0,
+			"at_noon": 0,
+			"evening": 0
+		}, {
+			"day": "5",
+			"forenoon": 0,
+			"at_noon": 0,
+			"evening": 0
+		}, {
+			"day": "6",
+			"forenoon": 0,
+			"at_noon": 0,
+			"evening": 0
+		}, {
+			"day": "7",
+			"forenoon": 0,
+			"at_noon": 0,
+			"evening": 0
+		}]
+	}
+}

@@ -32,20 +32,15 @@
 
         this.$store.dispatch('bindHealthNum', this.healthCode).then((res)=>{
            if(res.data.code !== 200) {
-             this.$store.dispatch('displayErrorLoad', {
-                load: '正在加载',
-                errorInfo: res.data.msg
-             });
+             this.$store.dispatch('displayErrorLoad');
+             this.$store.commit('updateErrorText', '绑定数据出错')
              return;
            }
            this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})   
 
            this.$router.push({ name: 'memberlist', params: { code: this.healthCode }})
         }).catch(() => {
-            this.$store.dispatch('displayErrorLoad', {
-               load: '正在加载',
-               errorInfo: '后端报错'
-            });
+            this.$store.commit('updateErrorText', '绑定数据出错')
         })
         
       }

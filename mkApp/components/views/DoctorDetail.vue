@@ -3,12 +3,12 @@
         <div class="doctorInfo">
           <!--内容部分-->
           <div class="doctorAvator">
-            <h3>工号 : <span>778561</span></h3>
+            <h3>工号 : <span>{{DoctorInfo.job_number}}</span></h3>
             <div class="doctorName">
               <div class="avator">
                 <img src="../../../public/img/avator.jpg">
-                <img src="../../../public/img/man_icon@2x.png">
-                <img src="../../../public/img/woman_icon@2x.png">
+                <img v-if="DoctorInfo.sex === 1" src="../../../public/img/man_icon@2x.png">
+                <img v-if="DoctorInfo.sex === 2" src="../../../public/img/woman_icon@2x.png">
               </div>
               <div class="name">
                 <span></span>
@@ -25,21 +25,21 @@
                 <i class="microtchFamily microtech-education"></i>
                 <span>学历</span>
               </p>
-              <p class="desRight" id="education">本科</p>
+              <p class="desRight" id="education">{{DoctorInfo.education}}</p>
             </div>
             <div class="contactDes margin">
               <p class="desLeft">
                 <i class="microtchFamily microtech-phone_icon_search_pr"></i>
                 <span>电话</span>
               </p>
-              <p class="desRight" id="phone">15189037852</p>
+              <p class="desRight" id="phone">{{DoctorInfo.phone}}</p>
             </div>
             <div class="contactDes">
               <p class="desLeft">
                 <i class="microtchFamily microtech-hospital_icon_search"></i>
                 <span >医院</span>
               </p>
-              <p class="desRight" id="workAdd">金阳社区第二人民医院</p>
+              <p class="desRight" id="workAdd">{{DoctorInfo.hospitalName}}</p>
             </div>
           </div>
           <div class="doctorDes">
@@ -48,8 +48,7 @@
               <span>简介 : </span>
             </div>
             <div class="desContent">
-              主任医师，教授，博士生导师，全国优秀临床研修老师，北京市中医住院医师规范化培训师承指导老师，全国中医院优秀院长。受教于中医大师刘渡舟教授、苏宝刚教授，继承经典辨证思路，擅长运用精方辨证施治。
-              从事中医临床38年余，对中医内伤杂病，人体血管疾病等有较深造诣。临床诊治中医内科杂病、肾病、呼吸病、咳嗽、喘息、上呼吸道感染、肿瘤的术前及术后的中医调理等有显著的疗效
+                {{DoctorInfo.desc}}
             </div>
           </div>
           <div class="workTime">
@@ -63,47 +62,11 @@
                 <li>中午</li>
                 <li>晚上</li>
               </ul>
-              <ul class="workText">
-                <li class="weekDay">星期一</li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-              </ul>
-              <ul class="workText">
-                <li class="weekDay">星期二</li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-              </ul>
-              <ul class="workText">
-                <li class="weekDay">星期三</li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-              </ul>
-              <ul class="workText">
-                <li class="weekDay">星期四</li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-              </ul>
-              <ul class="workText">
-                <li class="weekDay">星期五</li>
-                <li><i class="microtchFamily microtech-gou"></i></li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-              </ul>
-              <ul class="workText">
-                <li class="weekDay">星期六</li>
-                <li><i class="microtchFamily microtech-gou "></i></li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
-              </ul>
-              <ul class="workText">
-                <li class="weekDay">星期天</li>
-                <li><i class="microtchFamily microtech-gou "></i></li>
-                <li><i class="microtchFamily "></i></li>
-                <li><i class="microtchFamily "></i></li>
+              <ul class="workText" v-for="(item,index) in DoctorInfo.visits_weeks">
+                <li class="weekDay">{{weekMap[index]}}</li>
+                <li><i class="microtchFamily" :class="item.forenoon ? 'microtech-gou': '' "></i></li>
+                <li><i class="microtchFamily" :class="item.atnoon ? 'microtech-gou': '' "></i></li>
+                <li><i class="microtchFamily" :class="item.evening ? 'microtech-gou': '' "></i></li>
               </ul>
               <ul class="workTextEnd">
                 <li>&nbsp;</li>
@@ -140,7 +103,8 @@
     },
     data() {
       return {
-        title: 'userInfo'
+        title: 'userInfo',
+        weekMap: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天']
       }
     }
   }

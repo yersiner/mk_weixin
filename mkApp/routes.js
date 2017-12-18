@@ -3,6 +3,7 @@ const Apply = () => import ('./components/views/Apply.vue');
 const Combine = () => import ('./components/views/Combine.vue');
 const MemberList = () => import ('./components/views/MemberList.vue');
 const DoctorDetail = () => import ('./components/views/DoctorDetail.vue');
+const HealthGuide = () => import ('./components/views/HealthGuide.vue');
 
 import User from './components/views/User';
 import NotFoundView from './components/NotFoundView';
@@ -28,11 +29,16 @@ const routers = [{
 	component: MemberList,
 	meta: {title: '康复指导', auth: false}
 }, {
+	name: 'healthGuide',
+	path: '/healthGuide',
+	component: HealthGuide,
+    meta: {title: '健康档案', auth: false}
+}, {
 	path: '/user/:id',
 	name: 'user',
 	component: User
 }, {
-	path: '*',
+	path: '/',
 	name: 'apply',
 	component: Apply
 }]

@@ -9,6 +9,7 @@ export default new Vuex.Store({
 		isLoading: {
 			load: false,
 			text: '正在加载',
+			errorText: '后端报错',
 			success: false,
 			error: false
 		},
@@ -26,6 +27,14 @@ export default new Vuex.Store({
 		selectMember: {
 			name: '',
 			user_id: '',
+			phone: '',
+			age: '',
+			diseases:[],   //#病种:0=糖尿/1=高血/2=脑梗/3=其他[0,1,2,3]
+	        sex:1,    //#性别 【-1:"未知"，1:"男"，2:"女"】
+	        illness: "",      //# 现病情
+	        always: "",       //# 既往史
+	        personage: "",    //# 个人史
+	        familys: ""      //# 家族史
 		},
 		DoctorInfo: {
 			"name": "gyfnice",
@@ -79,6 +88,15 @@ export default new Vuex.Store({
 			    pageSize:8 //#每页记录数
 			})
 		},
+		fetchHealthRecord({commit}, payload) {
+			commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在提交'})
+			return Api.request('post', Api.getURL('weichat/getHealthFile'), {
+				userId: payload.user_id
+			}).then((res) => {
+  				commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
+				commit('updateHealthRecord', res.data.obj);
+			})
+		},
 		fetchMemberList({commit, state, dispatch}, info) {
 			//获取家庭成员档案信息
 			return Api.request('post', Api.getURL('weichat/getFamilyMembers'), {
@@ -86,18 +104,25 @@ export default new Vuex.Store({
 			}).then((res)=> {
 				console.log('加载家庭成员档案信息', res);
 				commit('updateMemberList', res.data.obj);
-
-				//查询该成员的随访信息
-				dispatch('fetchDoctorGuides', {
-					user_id: state.selectMember.user_id,
-					currentPage: 1
-				}).then((res) => {
-					console.log('成员的随访信息--->', res);
-					commit('updateMemberInfoList', {
-						current: false,
-						...res.data.obj
-					});
-				})
+				if(!info) {
+					//查询该成员的随访信息
+					return dispatch('fetchDoctorGuides', {
+						user_id: state.selectMember.user_id,
+						currentPage: 1
+					}).then((res) => {
+						console.log('成员的随访信息--->', res);
+						commit('updateMemberInfoList', {
+							current: false,
+							...res.data.obj
+						});
+					})
+				}else {
+					//加载健康档案					
+					return dispatch('fetchHealthRecord', {
+						user_id: state.selectMember.user_id
+					})
+					//console.log(3333);
+				}
 			})
 
 			//return new Promise((resolve, reject) => {
@@ -129,12 +154,16 @@ export default new Vuex.Store({
       				commit('updateStatus', {
       					status: data.obj.status || 1
       				})
+				}else {
+      				dispatch('displayErrorLoad');
+      				commit('updateErrorText', '提交失败');
 				}
 			}).catch(() => {
-				dispatch('displayErrorLoad', {
-					load: '正在提交',
-					errorInfo: '提交失败'
-				});
+				//dispatch('displayErrorLoad', {
+				//	load: '正在提交',
+				//	errorInfo: '提交失败'
+				//});
+				commit('updateErrorText', '提交失败')
 				console.log('请求失败');
 			})
 		},
@@ -150,14 +179,17 @@ export default new Vuex.Store({
 			//return api.request('get', config.getURL('login/captcha'))
 		},
 		displayErrorLoad({commit}, payload) {
-			commit('updateLoadingStatus', {isLoading: false, type: 'load', text: payload.load})
-			commit('updateLoadingStatus', {isLoading: true, type: 'error', text: payload.errorInfo})
+			commit('updateLoadingStatus', {isLoading: false, type: 'load'})
+			commit('updateLoadingStatus', {isLoading: true, type: 'error'})
 			setTimeout(()=>{
-				commit('updateLoadingStatus', {isLoading: false, type: 'error', text: payload.errorInfo})
+				commit('updateLoadingStatus', {isLoading: false, type: 'error'})
 			}, 800)
 		}
 	},
 	mutations: {
+		updateErrorText(state, payload) {
+			state.isLoading.errorText = payload
+		},
 		updateLoadingStatus (state, payload) {
 			if(payload.type === 'load') {
 	    		state.isLoading.load = payload.isLoading
@@ -189,6 +221,7 @@ export default new Vuex.Store({
 	    },
 	    updateMemberList(state, payload) {
 	    	var list = payload.list
+	    	state.MemberList.pData1 = []
 	    	for(var item of list) {
 	    		state.MemberList.pData1.push({
 	    			text: item.name,
@@ -208,6 +241,9 @@ export default new Vuex.Store({
 	    	for(var item of list) {
 	    		state.MemberInfoList.push(item)
 	    	}
+	    },
+	    updateHealthRecord(state, payload) {
+	    	state.selectMember = Object.assign({}, state.selectMember, payload)
 	    },
 	    updateDoctorInfo(state, payload) {
 	    	state.DoctorInfo = Object.assign({}, state.DoctorInfo, payload)

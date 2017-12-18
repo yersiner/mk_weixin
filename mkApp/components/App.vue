@@ -16,7 +16,7 @@
     <!-- route outlet -->
     <!-- component matched by the route will render here -->
     <Loading :load="isLoading.load" :loading="isLoading.load" :text="isLoading.text"></Loading>
-    <Loading :load="isLoading.error" :error="isLoading.error" :text="isLoading.text"></Loading>
+    <Loading :load="isLoading.error" :error="isLoading.error" :text="isLoading.errorText"></Loading>
     <Loading :load="isLoading.success" :success="isLoading.success" :text="isLoading.text"></Loading>
     <transition name="fade" mode="out-in">
         <router-view v-wechat-title="$route.meta.title"></router-view>

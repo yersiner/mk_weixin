@@ -68,7 +68,7 @@
          //me.selectMember = me.MemberList.pData1[0].name
          //debugger;
          //store.dispatch('fetchDoctorGuides') //查询该成员的随访信息
-         console.log('error---');
+         console.log('error---niceMemberList');
       })
     },
     mounted () {
@@ -145,7 +145,7 @@
           return;
         }
         this.selectMember.name = str
-        this.selectMember.id = data.select1.value
+        this.selectMember.user_id = data.select1.value
 
         //查询该成员的随访信息
         count = 0;

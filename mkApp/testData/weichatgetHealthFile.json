@@ -1,0 +1,15 @@
+{
+	"code": 200,
+	"msg": "访问成功",
+	"obj": {
+		"name": "gyfnice",
+		"age": 48,
+		"diseases": [1],
+		"sex": -1,
+		"phone": "13020003856",
+		"illness": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto tempora fuga ipsa, accusamus alias assumenda pariatur magni praesentium nihil qui id aspernatur explicabo nam minima nulla aliquid possimus nobis delectus!",
+		"always": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro sapiente, voluptatem quos reiciendis possimus sit nemo fuga facere repudiandae laborum vero distinctio labore, quis eveniet ipsa amet. Tempore, dicta ipsum!",
+		"personage": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias eius nam, esse quam mollitia ex similique officia deleniti, ut hic cupiditate consectetur! Voluptates eius aperiam cupiditate numquam doloribus quibusdam nulla.</div><div>Ab distinctio numquam reiciendis tempore temporibus itaque iusto optio, facere soluta dolorum ad ullam inventore, ipsa ex, fugit voluptate aperiam vel atque laborum aliquam voluptates. Qui nesciunt accusantium voluptates esse.</div><div>Veritatis, quis, a. Veniam quam praesentium, placeat, saepe in error impedit culpa sit cupiditate distinctio eius, explicabo tempora aut voluptatibus. Incidunt amet illo, porro quam iusto deleniti esse, ipsa quia?</div><div>Magnam aperiam, consectetur aspernatur omnis deserunt deleniti quis quasi doloremque, possimus incidunt eligendi, numquam! Quasi fuga saepe placeat, accusamus aliquam possimus inventore maiores praesentium. Sit vitae temporibus a similique nam?</div> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur atque in voluptatibus dolorem laudantium voluptate fugiat, architecto placeat at similique recusandae voluptas necessitatibus eaque delectus praesentium magni ullam, magnam odio.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque molestias, consequatur blanditiis similique? Voluptatum asperiores error dolorem aut, voluptatem quasi incidunt ducimus provident, voluptatibus maiores nostrum tenetur. Nostrum, obcaecati, tempora.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam officia, quam rerum nisi facere dolores dignissimos veniam illo enim earum, error, labore eius praesentium ducimus ipsa! Impedit sed, beatae odit?",
+		"familys": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum, et perferendis vero quisquam. Expedita at, aliquam dolore et sint, quam sunt quo cupiditate totam laborum sed, doloribus impedit accusantium animi."
+	}
+}

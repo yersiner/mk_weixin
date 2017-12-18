@@ -4,7 +4,7 @@
   */
 import axios from 'axios'
 
-const devMode = false;
+const devMode = true;
 
 var gurl = encodeURIComponent(location.href.split("#")[0]);
 
@@ -20,15 +20,18 @@ const router = {
         getFamilyMembers: '/weichat/getFamilyMembers',
         getHospital: '/weichat/getHospital',
         applySign: '/weichat/applySign',
-        dutyDoctorInfo: 'weichat/dutyDoctorInfo'
+        dutyDoctorInfo: 'weichat/dutyDoctorInfo',
+        getHealthFile: '/weichat/getHealthFile'
     }
 }
 
-axios.interceptors.response.use(response => response, (error) => {
-    console.log('数据加载出错');
-    //alert('后端加载出错');
-    Promise.resolve(error.response)
-})
+function interceptorsMethod(store) {
+    axios.interceptors.response.use(response => response, (error) => {
+        store.dispatch('displayErrorLoad');
+        console.log(error.response);
+        Promise.resolve(error.response)
+    })
+}
 
 function requestMethod(method, url, data = null) {
     if (!method) {
@@ -74,6 +77,7 @@ export default  {
          }
          return router[path][subPath]
      },
-     request:requestMethod
+     request:requestMethod,
+     interceptors: interceptorsMethod
 
  };
