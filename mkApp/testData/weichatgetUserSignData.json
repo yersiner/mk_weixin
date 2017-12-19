@@ -1,0 +1,234 @@
+{
+	"code": 200,
+	"msg": "访问成功",
+	"obj": {
+		"sugar": [{
+			"_id": 1,
+			"count": 2
+		}, {
+			"_id": 0,
+			"count": 5
+		}],
+		"pressure": [{
+			"_id": 1,
+			"count": 3
+		}, {
+			"_id": 0,
+			"count": 4
+		}],
+		"heart": [{
+			"_id": 1,
+			"count": 1
+		}, {
+			"_id": -1,
+			"count": 2
+		}, {
+			"_id": 0,
+			"count": 4
+		}],
+		"oxygen": [{
+			"_id": 0,
+			"count": 7
+		}],
+		"lowCount": 7,
+		"normalCount": 20,
+		"highCount": 5,
+		"data": [{
+			"_id": "5a150c18c5c2ef5e54899308",
+			"day": "2017-11-22",
+			"user_id": "5a37373756563d4054bb8892",
+			"times": {
+				"$numberLong": "1511328780"
+			},
+			"sugar": {
+				"value": null,
+				"unit": "mmol/L",
+				"status": 0
+			},
+			"pressure": {
+				"dia_value": null,
+				"sys_value": null,
+				"unit": "mmHg",
+				"status": 0
+			},
+			"heart": {
+				"value": null,
+				"unit": "次/分钟",
+				"status": 0
+			},
+			"oxygen": {
+				"value": null,
+				"unit": "%",
+				"status": 0
+			}
+		}, {
+			"_id": "5a150ca9c5c2ef5e5489930c",
+			"day": "2017-11-22",
+			"user_id": "5a37373756563d4054bb8892",
+			"times": {
+				"$numberLong": "1511328900"
+			},
+			"sugar": {
+				"value": 6.9,
+				"unit": "mmol/L",
+				"status": 0
+			},
+			"pressure": {
+				"dia_value": null,
+				"sys_value": null,
+				"unit": "mmHg",
+				"status": 0
+			},
+			"heart": {
+				"value": null,
+				"unit": "次/分钟",
+				"status": 0
+			},
+			"oxygen": {
+				"value": null,
+				"unit": "%",
+				"status": 0
+			}
+		}, {
+			"_id": "5a169ea5c5c2ef5e5489930f",
+			"day": "2017-11-23",
+			"user_id": "5a37373756563d4054bb8892",
+			"times": {
+				"$numberLong": "1511431800"
+			},
+			"sugar": {
+				"value": null,
+				"unit": "mmol/L",
+				"status": 0
+			},
+			"pressure": {
+				"dia_value": 193.0,
+				"sys_value": 113.0,
+				"unit": "mmHg",
+				"status": 1
+			},
+			"heart": {
+				"value": null,
+				"unit": "次/分钟",
+				"status": 0
+			},
+			"oxygen": {
+				"value": null,
+				"unit": "%",
+				"status": 0
+			}
+		}, {
+			"_id": "5a1c1265c5c2ef5e54899320",
+			"day": "2017-11-27",
+			"user_id": "5a37373756563d4054bb8892",
+			"times": {
+				"$numberLong": "1511789100"
+			},
+			"sugar": {
+				"value": null,
+				"unit": "mmol/L",
+				"status": 0
+			},
+			"pressure": {
+				"dia_value": 193.0,
+				"sys_value": 113.0,
+				"unit": "mmHg",
+				"status": 1
+			},
+			"heart": {
+				"value": null,
+				"unit": "次/分钟",
+				"status": 0
+			},
+			"oxygen": {
+				"value": null,
+				"unit": "%",
+				"status": 0
+			}
+		}, {
+			"_id": "5a2a3a87c5c2ef5e5489932e",
+			"day": "2017-12-08",
+			"user_id": "5a37373756563d4054bb8892",
+			"times": {
+				"$numberLong": "1512716880"
+			},
+			"sugar": {
+				"value": null,
+				"unit": "mmol/L",
+				"status": 0
+			},
+			"pressure": {
+				"dia_value": null,
+				"sys_value": null,
+				"unit": "mmHg",
+				"status": 0
+			},
+			"heart": {
+				"value": 50.0,
+				"unit": "次/分钟",
+				"status": -1
+			},
+			"oxygen": {
+				"value": null,
+				"unit": "%",
+				"status": 0
+			}
+		}, {
+			"_id": "5a2a3a87c5c2ef5e54899321",
+			"day": "2017-12-08",
+			"user_id": "5a37373756563d4054bb8892",
+			"times": {
+				"$numberLong": "1512716880"
+			},
+			"sugar": {
+				"value": 6.9,
+				"unit": "mmol/L",
+				"status": 1
+			},
+			"pressure": {
+				"dia_value": 62.0,
+				"sys_value": 120.0,
+				"unit": "mmHg",
+				"status": 0
+			},
+			"heart": {
+				"value": 50.0,
+				"unit": "次/分钟",
+				"status": -1
+			},
+			"oxygen": {
+				"value": 50.0,
+				"unit": "%",
+				"status": 0
+			}
+		}, {
+			"_id": "5a2a3a87c5c2ef5e54899322",
+			"day": "2017-12-08",
+			"user_id": "5a37373756563d4054bb8892",
+			"times": {
+				"$numberLong": "1512716880"
+			},
+			"sugar": {
+				"value": 6.9,
+				"unit": "mmol/L",
+				"status": 1
+			},
+			"pressure": {
+				"dia_value": 100.0,
+				"sys_value": 156.0,
+				"unit": "mmHg",
+				"status": 1
+			},
+			"heart": {
+				"value": 90.0,
+				"unit": "次/分钟",
+				"status": 1
+			},
+			"oxygen": {
+				"value": 60.0,
+				"unit": "%",
+				"status": 0
+			}
+		}]
+	}
+}

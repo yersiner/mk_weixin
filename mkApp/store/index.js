@@ -36,6 +36,12 @@ export default new Vuex.Store({
 	        personage: "",    //# 个人史
 	        familys: ""      //# 家族史
 		},
+		UserSignData: {
+			xData: [],
+			yData: {
+
+			}
+		},
 		DoctorInfo: {
 			"name": "gyfnice",
 	        "phone": "18732323232",
@@ -53,6 +59,11 @@ export default new Vuex.Store({
 			return Api.request('post', Api.getURL('weichat/dutyDoctorInfo'), {
 				openId: state.openId
 			}).then((res)=> {
+				if(res.data.code !== 200) {
+					dispatch('displayErrorLoad');
+					commit('updateErrorText', res.data.msg);
+					return;
+				}
 				commit('updateDoctorInfo', res.data.obj)
 			}).catch(()=>{
 				console.log('医生信息数据报错');
@@ -88,12 +99,22 @@ export default new Vuex.Store({
 			    pageSize:8 //#每页记录数
 			})
 		},
+		fetchUserSignData({commit}, payload) {
+			//获取用户体格数据
+			commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
+			return Api.request('post', Api.getURL('weichat/getUserSignData'), {
+				userId: payload.user_id
+			}).then((res) => {
+  				commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})
+				commit('updateUserSignData', res.data.obj);
+			})
+		},
 		fetchHealthRecord({commit}, payload) {
-			commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在提交'})
+			commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
 			return Api.request('post', Api.getURL('weichat/getHealthFile'), {
 				userId: payload.user_id
 			}).then((res) => {
-  				commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
+  				commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})
 				commit('updateHealthRecord', res.data.obj);
 			})
 		},
@@ -104,7 +125,7 @@ export default new Vuex.Store({
 			}).then((res)=> {
 				console.log('加载家庭成员档案信息', res);
 				commit('updateMemberList', res.data.obj);
-				if(!info) {
+				if(info.name === 'guide') {
 					//查询该成员的随访信息
 					return dispatch('fetchDoctorGuides', {
 						user_id: state.selectMember.user_id,
@@ -116,12 +137,16 @@ export default new Vuex.Store({
 							...res.data.obj
 						});
 					})
-				}else {
+				}else if(info.name === 'health'){
 					//加载健康档案					
 					return dispatch('fetchHealthRecord', {
 						user_id: state.selectMember.user_id
 					})
 					//console.log(3333);
+				}else if(info.name === 'record') {
+					return dispatch('fetchUserSignData', {
+						user_id: state.selectMember.user_id
+					})
 				}
 			})
 
@@ -135,13 +160,15 @@ export default new Vuex.Store({
 		},
 		fetchHospitalList({commit, state}) {
 			//获取医院列表信息
-			if(state.status !== -1) {
+			if(state.status !== -1 && state.status !== -10) {
 				return;
 			}
 			return Api.request('post', Api.getURL('weichat/getHospital'), {
 				region_id: ''
 			}).then((res) => {
 				commit('updateHostList', res.data.obj)
+			}).catch((res)=> {
+				commit('updateErrorText', '加载医院列表失败')
 			})
 		},
 		submitApply({commit, dispatch}, data) {
@@ -183,7 +210,7 @@ export default new Vuex.Store({
 			commit('updateLoadingStatus', {isLoading: true, type: 'error'})
 			setTimeout(()=>{
 				commit('updateLoadingStatus', {isLoading: false, type: 'error'})
-			}, 800)
+			}, 1800)
 		}
 	},
 	mutations: {
@@ -241,6 +268,36 @@ export default new Vuex.Store({
 	    	for(var item of list) {
 	    		state.MemberInfoList.push(item)
 	    	}
+	    },
+	    updateUserSignData(state, payload) {
+	    	state.UserSignData = Object.assign({}, state.UserSignData, payload)
+
+	    	let xData = payload.data.map((item)=>{
+	    		return (item.day.slice(8) + '日')
+	    	})
+
+	    	Vue.set(state.UserSignData, 'xData', xData);
+
+	    	let yData = {
+	    		heart: payload.data.map((item)=>{
+		    		return item.heart.value
+		    	}),
+		    	oxygen:payload.data.map((item)=>{
+		    		return item.oxygen.value
+		    	}),
+		    	dia_value: payload.data.map((item)=>{
+		    		return item.pressure.dia_value
+		    	}),
+		    	sys_value: payload.data.map((item)=>{
+		    		return item.pressure.sys_value
+		    	}),
+		    	sugar: payload.data.map((item)=>{
+		    		return item.sugar.value
+		    	})
+	    	}
+	    	Vue.set(state.UserSignData, 'yData', yData);
+	    	console.log('UserSignData-->', state.UserSignData);
+	    	
 	    },
 	    updateHealthRecord(state, payload) {
 	    	state.selectMember = Object.assign({}, state.selectMember, payload)

@@ -28,6 +28,8 @@
     },
     methods: {
       search() {
+        this.$router.push({ name: 'memberlist', params: { code: 323232 }})
+        return;
         this.$store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
 
         this.$store.dispatch('bindHealthNum', this.healthCode).then((res)=>{

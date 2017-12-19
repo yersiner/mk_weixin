@@ -8,7 +8,7 @@
                   尊敬的用户您好，您的签约申请因为尚未达到签约要求，请再接再厉没有通过申请。希望您继续努力哦！
               </p>
 
-              <a href="javascript:;" class="weui-btn weui-btn_plain-default submit-button">重新申请</a>
+              <a href="javascript:;" @click="ReApply()" class="weui-btn weui-btn_plain-default submit-button">重新申请</a>
           </div>
          </div>
       </div>
@@ -24,7 +24,7 @@
       <div v-show="status === -1 || status === -10" class="applyform">
           <div class="pane pt">
               <div class="weui-cells__title title clt">基本信息</div>
-              <div class="weui-cells weui-cells_form">
+              <div class=" weui-cells_form">
                   <div class="weui-cell">
                       <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
                       <div class="weui-cell__bd">
@@ -67,17 +67,19 @@
           </div>
           <div class="pane">
               <div class="weui-cells__title title">重点标记人群(多选)</div>
-              <div class="weui-cells weui-cells_checkbox">
-                <label @click="toggleItem(disease, disease.checked)" v-for="(disease,index) in diseaseNum" class="weui-cell weui-check__label" :for="disease.id">
-                    <div class="weui-cell__bd">
-                        <p>{{disease.name}}</p>
-                    </div>
-                    <div class="weui-cell__hd">
-                        <input v-model="disease.checked" type="checkbox" class="weui-check" name="checkbox1" :id="disease.id">
-                        <i class="weui-icon-checked"></i>
-                    </div>
-                </label>
-            </div>
+              <div class="weui-cells_form">
+                    <div class="weui-cells_checkbox">
+                      <label @click="toggleItem(disease, disease.checked)" v-for="(disease,index) in diseaseNum" class="weui-cell weui-check__label" :for="disease.id">
+                          <div class="weui-cell__bd">
+                              <p>{{disease.name}}</p>
+                          </div>
+                          <div class="weui-cell__hd">
+                              <input v-model="disease.checked" type="checkbox" class="weui-check" name="checkbox1" :id="disease.id">
+                              <i class="weui-icon-checked custom-checked"></i>
+                          </div>
+                      </label>
+                  </div>
+              </div>
           </div>
           <a @click="submit" href="javascript:;" class="weui-btn weui-btn_plain-default submit-button">提交</a>
           <vue-pickers :hide="onceShow" :show="showPickCity"
@@ -168,6 +170,12 @@
       }
     },
     methods: {
+      ReApply() {
+        this.$store.commit('updateStatus', {
+          status: -1
+        })
+        this.$store.dispatch('fetchHospitalList')
+      },
       checkTel(event) {
         if(this.phone.length > 11) {
           this.phone = this.phone.slice(0, 11);
@@ -287,7 +295,7 @@
        font-size: 60px;
     }
     .pt {
-       padding-top: 12px;
+       
     }
     .pane .clt {
       margin-top:0;
@@ -305,12 +313,22 @@
     }
     .apply {
       height: 100%;
+      padding-bottom:30px;
+    }
+    .weui-cells_checkbox .weui-check:checked+.custom-checked:before {
+      color: #38E6FF;
+    }
+    .weui-cells_checkbox .weui-check+.weui-icon-checked:before {
+        content: "\EA06";
+        color: #E9F0F5;
     }
     .pane {
       background: white;
     }
     .title {
-      margin-top: .37rem;
+      margin-top: 8px;
+      margin-bottom: .5em;
+      padding-top: 27px;
       font-weight: bold;
       color: black;
       font-size: 22px;

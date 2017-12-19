@@ -90,7 +90,9 @@
 	  },
 	  asyncData({store, route}) {
 	    var me = this;
-	    return store.dispatch('fetchMemberList', true).catch((t)=>{
+	    return store.dispatch('fetchMemberList', {
+	    	name: 'health'
+	    }).catch((t)=>{
 	       //me.selectMember = me.MemberList.pData1[0].name
 	       //debugger;
 	       //store.dispatch('fetchDoctorGuides') //查询该成员的随访信息

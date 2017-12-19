@@ -9,7 +9,8 @@ import routes from './routes'
 import lodash from 'lodash';
 import store from './store'
 
-//import echarts from 'echarts'
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 //Object.defineProperty(Vue.prototype, '$lodash', { value: lodash });
 
@@ -19,10 +20,11 @@ import wxConfig from './utils/wx.config';
 //import wx from './utils/weixin';
 
 // Import Helpers for filters
-import { prettyDate } from './filters'
+import { prettyDate, minSecond } from './filters'
 
 // Import Install and register helper items
 Vue.filter('prettyDate', prettyDate)
+Vue.filter('minSecond', minSecond)
 
 
 const FastClick = require('fastclick')

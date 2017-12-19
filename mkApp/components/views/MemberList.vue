@@ -4,7 +4,7 @@
           <div class="weui-tab cpane">
               <a @click="showList()" class="weui-cell weui-cell_access top-head" href="javascript:;">
                   <div class="weui-cell__bd item">
-                      <p>{{selectMember.name}}</p>
+                      <p style="padding-left: 25px; font-size:22px;">{{selectMember.name}}</p>
                   </div>
                   <div class="weui-cell__ft" style="margin-right: 18px;">
                       <span>请选择</span>
@@ -45,7 +45,7 @@
 
   let count = 1;
   export default {
-    name: "uioss",
+    name: "MemberList",
     computed: {
        totalCount() {
            return count * 4
@@ -64,7 +64,9 @@
     },
     asyncData({store, route}) {
       var me = this;
-      return store.dispatch('fetchMemberList').catch(()=>{
+      return store.dispatch('fetchMemberList', {
+        name: 'guide'
+      }).catch(()=>{
          //me.selectMember = me.MemberList.pData1[0].name
          //debugger;
          //store.dispatch('fetchDoctorGuides') //查询该成员的随访信息
@@ -166,7 +168,6 @@
         this.showPickList = true;
       },
       jump(t) {
-        console.log('jump--', t);
         //this.$router.push({ name: 'user', params: { id: 123 }})
         this.$router.push({ name: 'user', params: { id: 123 }})
       }
@@ -178,10 +179,26 @@
     .cpane {
       display: flex;
       display: -webkit-flex;
+      flex-direction: column;
       -webkit-flex-direction: column;
     }
+    .weui-media-box:before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 1px;
+        border-top: 0px solid #e5e5e5;
+        color: #e5e5e5;
+        -webkit-transform-origin: 0 0;
+        transform-origin: 0 0;
+        -webkit-transform: scaleY(.5);
+        transform: scaleY(.5);
+        left: 15px;
+    }
     .top-head {
-      height: 55px;
+      height: 30px;
       position: relative;
       z-index: 10;
       background:white;

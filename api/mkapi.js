@@ -21,7 +21,8 @@ const router = {
         getHospital: '/weichat/getHospital',
         applySign: '/weichat/applySign',
         dutyDoctorInfo: 'weichat/dutyDoctorInfo',
-        getHealthFile: '/weichat/getHealthFile'
+        getHealthFile: '/weichat/getHealthFile',
+        getUserSignData: '/weichat/getUserSignData'
     }
 }
 
