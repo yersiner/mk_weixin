@@ -73,6 +73,8 @@ export default  {
                nonceStr: data.nonceStr, // 必填，生成签名的随机串
                signature: data.signature,// 必填，签名，见附录1
            });
-        }))
+        })).catch((res)=> {
+           store.commit('updateErrorText', 'jssdk出错')
+        })
     }
 }

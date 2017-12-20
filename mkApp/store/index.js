@@ -89,7 +89,8 @@ export default new Vuex.Store({
 		bindHealthNum({commit, state}, info) {
 			return Api.request('post', Api.getURL('weichat/bindHealthNum'), {
 				openId: state.openId,
-				healthNum: info
+				healthNum: info.healthCode,
+				doctorId: info.doctorId
 			})
 		},
 		fetchDoctorGuides({commit}, payload) {
@@ -144,6 +145,7 @@ export default new Vuex.Store({
 					})
 					//console.log(3333);
 				}else if(info.name === 'record') {
+					//加载体格数据
 					return dispatch('fetchUserSignData', {
 						user_id: state.selectMember.user_id
 					})
@@ -255,7 +257,7 @@ export default new Vuex.Store({
 	    			value: item.user_id
 	    		})
 	    	}
-	    	console.log('9------>', state.MemberList.pData1);
+	    	console.log('9------>', state.MemberList.pData1, state.selectMember);
 	    	state.selectMember.name = list[0].name;
 	    	state.selectMember.user_id = list[0].user_id;
 	    },

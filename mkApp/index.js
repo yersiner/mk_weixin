@@ -9,8 +9,8 @@ import routes from './routes'
 import lodash from 'lodash';
 import store from './store'
 
-import echarts from 'echarts'
-Vue.prototype.$echarts = echarts
+//import echarts from 'echarts'
+//Vue.prototype.$echarts = echarts
 
 //Object.defineProperty(Vue.prototype, '$lodash', { value: lodash });
 
@@ -71,6 +71,8 @@ Vue.use(WechatAuth , {
           openId: openid
         })
         next(openid, {path: path});
+    }).catch(()=>{
+      console.log('openid error');
     })
 
     //axios.get('通过code值换取access_token接口地址', {

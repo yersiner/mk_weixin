@@ -10,7 +10,7 @@ import User from './components/views/User';
 import NotFoundView from './components/NotFoundView';
 
 const routers = [{
-	path: '/apply',
+	path: '/apply/:doctorId',
 	component: Apply,
 	name: 'apply',
     meta: {title: '申请签约家庭医生', auth: true}
@@ -20,7 +20,7 @@ const routers = [{
 	component: DoctorDetail,
     meta: {title: '医生详情', auth: true}
 },{
-	path: '/combine',
+	path: '/combine/:doctorId',
 	name: 'combine',
 	component: Combine,
     meta: {title: '绑定健康档案', auth: true}

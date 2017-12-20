@@ -4,7 +4,7 @@
   */
 import axios from 'axios'
 
-const devMode = true;
+const devMode = false;
 
 var gurl = encodeURIComponent(location.href.split("#")[0]);
 

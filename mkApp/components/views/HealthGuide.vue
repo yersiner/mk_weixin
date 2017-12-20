@@ -16,26 +16,26 @@
 				</div>
 				<div class="contentText">
 					<div class="itemText">
-						<div class="tabNav">
-							<span>现病情</span><img @click="toggleA()" src="../../../public/img/arrow_icon.png"/>
+						<div class="tabNav" @click="toggleA()">
+							<span>现病情</span><img src="../../../public/img/arrow_icon.png"/>
 						</div>
 						<p :class=" Aflag ? 'spread' : '' " id="illness">{{selectMember.illness}}</p>
 					</div>
 					<div class="itemText">
-						<div class="tabNav">
-							<span>即往史</span><img @click="toggleB()" src="../../../public/img/arrow_icon.png"/>
+						<div class="tabNav" @click="toggleB()">
+							<span>即往史</span><img src="../../../public/img/arrow_icon.png"/>
 						</div>
 						<p :class=" Bflag ? 'spread' : '' " id="always">{{selectMember.always}}</p>
 					</div>
 					<div class="itemText">
-						<div class="tabNav">
-							<span>个人史</span><img @click="toggleC()" src="../../../public/img/arrow_icon.png"/>
+						<div class="tabNav" @click="toggleC()">
+							<span>个人史</span><img src="../../../public/img/arrow_icon.png"/>
 						</div>
 						<p :class=" Cflag ? 'spread' : '' " id="familys">{{selectMember.personage}}</p>
 					</div>
 					<div class="itemText dialogue">
-						<div class="tabNav">
-							<span>家族史</span><img @click="toggleD()" src="../../../public/img/arrow_icon.png"/>
+						<div class="tabNav" @click="toggleD()">
+							<span>家族史</span><img src="../../../public/img/arrow_icon.png"/>
 						</div>
 						<p :class=" Dflag ? 'spread' : '' " id="record_des">{{selectMember.familys}}</p>
 					</div>

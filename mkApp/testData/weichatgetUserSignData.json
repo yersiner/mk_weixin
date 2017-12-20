@@ -31,7 +31,7 @@
 			"count": 7
 		}],
 		"lowCount": 7,
-		"normalCount": 20,
+		"normalCount": 28,
 		"highCount": 5,
 		"data": [{
 			"_id": "5a150c18c5c2ef5e54899308",
@@ -103,7 +103,7 @@
 			},
 			"pressure": {
 				"dia_value": 193.0,
-				"sys_value": 113.0,
+				"sys_value": 173.0,
 				"unit": "mmHg",
 				"status": 1
 			},
@@ -215,7 +215,7 @@
 			},
 			"pressure": {
 				"dia_value": 100.0,
-				"sys_value": 156.0,
+				"sys_value": 196.0,
 				"unit": "mmHg",
 				"status": 1
 			},

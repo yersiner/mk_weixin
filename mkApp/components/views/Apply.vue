@@ -105,6 +105,9 @@
     },
     asyncData({store, route}) {
       //获取医院列表
+      if(route.params.doctorId !== 'nice') {
+         return;
+      }
       return store.dispatch('fetchHospitalList').catch(()=>{
          //alert('加载医院列表失败')
          console.log('加载医院列表失败');
@@ -152,7 +155,7 @@
             checked: false
           },
         ], //病种
-        doctorId: '',
+        doctorId: this.$route.params.doctorId === 'nice'? '' : this.$route.params.doctorId,
         hospitalId: '5a28ad70f11d1263b832bf24',
         selectCity: '请选择',
         selectHot: '请选择',

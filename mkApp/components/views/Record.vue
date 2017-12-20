@@ -1,9 +1,9 @@
 <template>
        <div class="phyDetail preLoad">
            <nav class="avatorNav">
-               <div :key="index" v-for="(member, index) in MemberList.pData1" class="avatorItem" data-type="" data-id="">
+               <div @click="togglePerson(index)" :key="index" v-for="(member, index) in MemberList.pData1" class="avatorItem" data-type="" data-id="">
                    <img src="../../../public/img/me_default@1x.png">
-                   <span>{{member.text}}</span>
+                   <span :class=" member.text === selectMember.name ? 'activet' : '' ">{{member.text}}</span>
                </div>
            </nav>
            <nav class="textNav">
@@ -13,7 +13,7 @@
            <!--表格 hide-->
            <section class="tableDisplay timeStatic">
                   
-                   <div v-if="!showFlag" id="chart">
+                   <div v-if="!showFlag && chartFlag" id="chart">
                        <LineChart :xData="UserSignData.xData" :yData="UserSignData.yData"></LineChart>
                    </div>
                    <header>
@@ -65,6 +65,7 @@
         data () {
             return {
                 showFlag: true,
+                chartFlag: true,
                 unitMap: {
                   "0": '正常',
                   "-1": '偏低',
@@ -96,6 +97,22 @@
            ])
         },
         methods:{
+            togglePerson(index) {
+               let curName = this.MemberList.pData1[index].text
+               if(this.selectMember.name === curName) {
+                  return;
+               }
+               this.selectMember.name = curName
+               this.selectMember.user_id = this.MemberList.pData1[index].value
+               this.$store.dispatch('fetchUserSignData', {
+                  user_id: this.selectMember.user_id
+               }).then(()=> {
+                  this.chartFlag = false
+                  setTimeout(()=>{
+                    this.chartFlag = true
+                  }, 200)
+               })
+            },
             toggle(flag){
                this.showFlag = flag
             }
@@ -107,6 +124,9 @@
     }
 </script>
 <style scoped>
+      .activet {
+        color: #38E6FF;
+      }
       ul,li{
         list-style: none;
       }
