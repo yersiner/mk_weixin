@@ -4,7 +4,7 @@
   */
 import axios from 'axios'
 
-const devMode = false;
+const devMode = true;
 
 var gurl = encodeURIComponent(location.href.split("#")[0]);
 
@@ -27,10 +27,28 @@ const router = {
 }
 
 function interceptorsMethod(store) {
-    axios.interceptors.response.use(response => response, (error) => {
+    //全局Ajax监控
+    axios.interceptors.response.use((response) => {
+      if( !!!~response.request.responseURL.indexOf('api') && response.data.code !== 200) {
+          store.dispatch('displayErrorLoad');
+          store.commit('updateErrorText', response.data.msg)
+          //return;
+      }
+      return response
+    }, (error) => {
         store.dispatch('displayErrorLoad');
         console.log(error.response);
         Promise.resolve(error.response)
+    })
+
+    axios.interceptors.request.use((request) => {
+      //console.log('---0---');
+      store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
+      return request
+    }, (error) => {
+        store.dispatch('displayErrorLoad');
+        console.log(error);
+        Promise.reject(error)
     })
 }
 
@@ -44,7 +62,9 @@ function requestMethod(method, url, data = null) {
         console.error('API function call requires url argument')
         return
     }
-    if(devMode) {
+   const [path, subPath] = url.match(/\w+/g);
+
+    if(devMode && path !== 'api') {
         method = 'get';
         return new Promise((resolve, reject) => {
               setTimeout(() => {
@@ -71,7 +91,8 @@ export default  {
      getURL: (url) => {
          url = url.replace(/^\//, "");
          const [path, subPath] = url.match(/\w+/g);
-         if(devMode) {
+         //console.log('path--->', path);
+         if(devMode && path !== 'api') {
             var webroot = "/testData/";
             let devPath = url.replace(/\//g, "");
             return webroot + devPath + ".json";

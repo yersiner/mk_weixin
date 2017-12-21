@@ -83,7 +83,7 @@
         <span></span>
       </div>
       <div class="button">
-        <button id="contactBtn">联系医生</button>
+        <button @click="concat()" id="contactBtn">联系医生</button>
       </div>
     </div>
 </template>
@@ -105,6 +105,12 @@
       return {
         title: 'userInfo',
         weekMap: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天']
+      }
+    },
+    methods: {
+      concat() {
+          console.log('close wx');
+          wx.closeWindow();
       }
     }
   }
@@ -157,6 +163,7 @@
       border-radius: 4px;
       webkit-border-radius: 4px;
       width: 100%;
+      padding-bottom: 10px;
     }
     .doctorAvator h3{
       color: #ffffff;

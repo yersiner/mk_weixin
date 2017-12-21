@@ -81,6 +81,7 @@ exports.vueLoader = (prodFlag) => {
               less: getLoader(prodFlag, 'less'),
               js: 'babel-loader'
             },
+            postcss: [require("autoprefixer")()],
             extractCSS: prodFlag
           }
         },

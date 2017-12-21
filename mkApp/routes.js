@@ -6,7 +6,6 @@ const DoctorDetail = () => import ('./components/views/DoctorDetail.vue');
 const HealthGuide = () => import ('./components/views/HealthGuide.vue');
 const Record = () => import ('./components/views/Record.vue');
 
-import User from './components/views/User';
 import NotFoundView from './components/NotFoundView';
 
 const routers = [{
@@ -41,9 +40,9 @@ const routers = [{
     meta: {title: '个人体格数据', auth: true}
 },{
 	path: '/',
-	name: 'apply',
-	component: Apply,
-    meta: {title: '申请签约家庭医生', auth: true}
+	name: 'NotFoundView',
+	component: NotFoundView,
+    meta: {title: '该页面无法显示', auth: true}
 }]
 
 

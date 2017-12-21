@@ -1,6 +1,6 @@
 {
 	"code":200,
-    "msg":"请求成功",
+    "msg":"请求失败",
     "obj":{
         "isApply":true,
         "status":-1,

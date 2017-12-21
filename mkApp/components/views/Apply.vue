@@ -47,7 +47,7 @@
                           <span>{{selectCity}}</span>
                       </div>
                   </a>
-                  <a @click="showList()" class="weui-cell weui-cell_access" href="javascript:;">
+                  <a v-show="!doctorId" @click="showList()" class="weui-cell weui-cell_access" href="javascript:;">
                       <div class="weui-cell__bd item">
                           <p>医院</p>
                       </div>
@@ -204,6 +204,31 @@
             doctorId: this.doctorId,
             hospitalId: this.hospitalId
          }
+         if(!this.name) {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写姓名');
+              return;
+         }else if(!this.phone) {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写电话');
+              return;
+         }else if(!this.fullAddress) {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写住址');
+              return;
+         }else if(!data.diseaseNum.length) {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请选择病种');
+              return;
+         }else if(!this.district) {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写地址');
+              return;
+         }else if(!this.hospitalId && !this.doctorId) {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写医院');
+              return;
+         }
          this.$store.dispatch('submitApply', data);
       },
       closeList() {
@@ -316,7 +341,10 @@
     }
     .apply {
       height: 100%;
-      padding-bottom:30px;
+    }
+    .applyform {
+      padding-bottom: 30px;
+      background: #f4f8fc;
     }
     .weui-cells_checkbox .weui-check:checked+.custom-checked:before {
       color: #38E6FF;

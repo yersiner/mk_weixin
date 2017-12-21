@@ -46,7 +46,7 @@
              this.state.warnTips = true
              return;
            }
-           this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})   
+           //this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})   
 
            this.$router.push({ name: 'memberlist', params: { code: this.healthCode }})
            
