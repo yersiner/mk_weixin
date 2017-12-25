@@ -17,24 +17,26 @@ var options = {
 /**
  * Get port from environment and store in Express.
  */
-var port = normalizePort(process.env.PORT || '443');
+var port = normalizePort(process.env.PORT || '8080');
 app.set('port', port);
+
+console.log('port--->', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var httpsServer = http.createServer(app);
 
-var httpsServer = https.createServer(options, app).listen(port, function () {
-    console.log('Https server listening on port ' + port);
-});
+//var httpsServer = https.createServer(options, app).listen(port, function () {
+//    console.log('Https server listening on port ' + port);
+//});
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(80,"192.168.1.136");
+httpsServer.listen(8080);
 httpsServer.on('error', onError);
 httpsServer.on('listening', onListening);
 
