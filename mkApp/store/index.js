@@ -20,9 +20,9 @@ export default new Vuex.Store({
 			pData1: []
 		},
 		MemberList: {
-			columns: 1,
-			pData1: []
-		},
+            columns: 1,
+            pData1: []
+        },
 		MemberInfoList: [],
 		selectMember: {
 			name: '',
