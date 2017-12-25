@@ -55,9 +55,13 @@
   }
   #App {
       background: rgb(244, 248, 252);
+      height: 100%;
   }
   .active {
     color: orange;
     background: blue;
+  }
+  body,html{
+    height: 100%;
   }
 </style>
