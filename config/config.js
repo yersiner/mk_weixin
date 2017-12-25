@@ -27,7 +27,7 @@ module.exports = {
                     },{
                         "type":"view",
                         "name":"智能设备",
-                        "url":"https://weichat.newmicrotech.cn/mkBox"
+                        "url":"https://weichat.newmicrotech.cn"
                     },{
                         "type":"view",
                         "name":"康复指导",
@@ -36,7 +36,7 @@ module.exports = {
                 },{
                     "name":"APP下载",
                     "type":"view",
-                    "url":"https://weichat.newmicrotech.cn/download"
+                    "url":"https://weichat.newmicrotech.cn"
                 }]
             },
             tq: {
