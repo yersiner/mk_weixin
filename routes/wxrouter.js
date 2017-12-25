@@ -90,16 +90,16 @@ weixin.textMsg(function (msg) {
                 }
             })
         }else if(ret.code==506){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>你还未绑定医生，点击申请签约</a>";
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>你还未绑定医生，点击申请签约</a>";
             weixin.sendMsg(resMsg);
         }else if(ret.code==507){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>没有绑定档案编号，点击绑定档案编号</a>";
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/combine/nice'>没有绑定档案编号，点击绑定档案编号</a>";
             weixin.sendMsg(resMsg);
         }else if(ret.code==509){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>签约审批中，点击查看详情</a>";
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>签约审批中，点击查看详情</a>";
             weixin.sendMsg(resMsg);
         }else if(ret.code==510){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>审批不通过，点击查看详情</a>";
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>审批不通过，点击查看详情</a>";
             weixin.sendMsg(resMsg);
         }else{
             resMsg.content = "服务器异常";
@@ -158,16 +158,16 @@ weixin.imageMsg(function (msg) {
                 })
             });
         }else if(ret.code==506){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>你还未绑定医生，点击申请签约</a>";
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>你还未绑定医生，点击申请签约</a>";
             weixin.sendMsg(resMsg);
         }else if(ret.code==507){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>没有绑定档案编号，点击绑定档案编号</a>";
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/combine/nice'>没有绑定档案编号，点击绑定档案编号</a>";
             weixin.sendMsg(resMsg);
         }else if(ret.code==509){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>签约审批中，点击查看详情</a>";
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>签约审批中，点击查看详情</a>";
             weixin.sendMsg(resMsg);
         }else if(ret.code==510){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>审批不通过，点击查看详情</a>";
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>审批不通过，点击查看详情</a>";
             weixin.sendMsg(resMsg);
         }else{
             resMsg.content = "服务器异常";
@@ -204,7 +204,7 @@ weixin.eventMsg(function(msg) {
                 }
             });
         }else{//非扫码登录
-            resMsg.content =  resMsg.content = "<a href='https://weichat.newmicrotech.cn/applyDoctor'>感谢您关注，请及时申请签约医生，为您提供及时便捷的健康管理服务</a>";
+            resMsg.content =  resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/combine/"+msg.eventKey+"'>感谢您关注，请及时申请签约医生，为您提供及时便捷的健康管理服务</a>";
             weixin.sendMsg(resMsg);
         }
         /**
