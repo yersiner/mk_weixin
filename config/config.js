@@ -13,30 +13,30 @@ module.exports = {
                 "button":[{
                     "type":"view",
                     "name":"体征数据",
-                    "url":"https://weichat.newmicrotech.cn/phyDetail"
+                    "url":"https://weichat.newmicrotech.cn/#/record"
                 },{
                     "name":"云病房",
                     "sub_button":[{
                         "type":"view",
                         "name":"家庭医生",
-                        "url":"https://weichat.newmicrotech.cn/familyDoctor"
+                        "url":"https://weichat.newmicrotech.cn/#/doctorDetail"
                     },{
                         "type":"view",
-                        "name":"电子病历",
-                        "url":"https://weichat.newmicrotech.cn/medicalRecords"
+                        "name":"健康档案",
+                        "url":"https://weichat.newmicrotech.cn/#/healthGuide"
                     },{
                         "type":"view",
-                        "name":"米可盒子",
-                        "url":"https://weichat.newmicrotech.cn/mkBox"
+                        "name":"智能设备",
+                        "url":"https://weichat.newmicrotech.cn"
                     },{
                         "type":"view",
-                        "name":"健康指导",
-                        "url":"https://weichat.newmicrotech.cn/guide"
+                        "name":"康复指导",
+                        "url":"https://weichat.newmicrotech.cn/#/memberlist/123"
                     }]
                 },{
                     "name":"APP下载",
                     "type":"view",
-                    "url":"https://weichat.newmicrotech.cn/download"
+                    "url":"https://weichat.newmicrotech.cn"
                 }]
             },
             tq: {
