@@ -3,7 +3,7 @@
     "msg":"请求失败",
     "obj":{
         "isApply":true,
-        "status":-1,
+        "status":2,
         "desc":"还没有申请"
     }
 }

@@ -125,6 +125,7 @@
               current: true,
               ...res.data.obj
             });
+            this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
             if(count < res.data.obj.totalCount){
               this.$refs.scroll.forceUpdate(true)
             }else{
@@ -160,6 +161,8 @@
             current: false,
             ...res.data.obj
           });
+          this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
+
         })
         this.closeList();
       },

@@ -32,7 +32,7 @@ const commonConfig = merge([{
 		output: {
 			path: PATHS.build,
 			chunkFilename: '[name].[hash].bundle.js',
-			publicPath: '/mkpublic/',
+			//publicPath: '/mkpublic/',
 			filename: "[name].[hash].js",
 		},
 		resolve: {

@@ -37,7 +37,7 @@ import Api from '~/api/mkapi'
 Api.interceptors(store)
 //require('./utils/weixin')
 
-//require('es6-promise').polyfill()
+require('es6-promise').polyfill()
 
 // Routing logic
 var router = new VueRouter({
@@ -127,7 +127,7 @@ router.beforeResolve((to, from, next) => {
 
 router.afterEach(routes => {
   if(typeof routes.meta.description !== undefined) {
-      console.log('-->', routes.meta.description);
+      //console.log('-->', routes.meta.description);
   }
 })
 

@@ -1,234 +1,228 @@
 {
-	"code": 200,
-	"msg": "访问成功",
-	"obj": {
-		"sugar": [{
-			"_id": 1,
-			"count": 2
-		}, {
-			"_id": 0,
-			"count": 5
-		}],
-		"pressure": [{
-			"_id": 1,
-			"count": 3
-		}, {
-			"_id": 0,
-			"count": 4
-		}],
-		"heart": [{
-			"_id": 1,
-			"count": 1
-		}, {
-			"_id": -1,
-			"count": 2
-		}, {
-			"_id": 0,
-			"count": 4
-		}],
-		"oxygen": [{
-			"_id": 0,
-			"count": 7
-		}],
-		"lowCount": 7,
-		"normalCount": 28,
-		"highCount": 5,
-		"data": [{
-			"_id": "5a150c18c5c2ef5e54899308",
-			"day": "2017-11-22",
-			"user_id": "5a37373756563d4054bb8892",
-			"times": {
-				"$numberLong": "1511328780"
-			},
-			"sugar": {
-				"value": null,
-				"unit": "mmol/L",
-				"status": 0
-			},
-			"pressure": {
-				"dia_value": null,
-				"sys_value": null,
-				"unit": "mmHg",
-				"status": 0
-			},
-			"heart": {
-				"value": null,
-				"unit": "次/分钟",
-				"status": 0
-			},
-			"oxygen": {
-				"value": null,
-				"unit": "%",
-				"status": 0
-			}
-		}, {
-			"_id": "5a150ca9c5c2ef5e5489930c",
-			"day": "2017-11-22",
-			"user_id": "5a37373756563d4054bb8892",
-			"times": {
-				"$numberLong": "1511328900"
-			},
-			"sugar": {
-				"value": 6.9,
-				"unit": "mmol/L",
-				"status": 0
-			},
-			"pressure": {
-				"dia_value": null,
-				"sys_value": null,
-				"unit": "mmHg",
-				"status": 0
-			},
-			"heart": {
-				"value": null,
-				"unit": "次/分钟",
-				"status": 0
-			},
-			"oxygen": {
-				"value": null,
-				"unit": "%",
-				"status": 0
-			}
-		}, {
-			"_id": "5a169ea5c5c2ef5e5489930f",
-			"day": "2017-11-23",
-			"user_id": "5a37373756563d4054bb8892",
-			"times": {
-				"$numberLong": "1511431800"
-			},
-			"sugar": {
-				"value": null,
-				"unit": "mmol/L",
-				"status": 0
-			},
-			"pressure": {
-				"dia_value": 193.0,
-				"sys_value": 173.0,
-				"unit": "mmHg",
-				"status": 1
-			},
-			"heart": {
-				"value": null,
-				"unit": "次/分钟",
-				"status": 0
-			},
-			"oxygen": {
-				"value": null,
-				"unit": "%",
-				"status": 0
-			}
-		}, {
-			"_id": "5a1c1265c5c2ef5e54899320",
-			"day": "2017-11-27",
-			"user_id": "5a37373756563d4054bb8892",
-			"times": {
-				"$numberLong": "1511789100"
-			},
-			"sugar": {
-				"value": null,
-				"unit": "mmol/L",
-				"status": 0
-			},
-			"pressure": {
-				"dia_value": 193.0,
-				"sys_value": 113.0,
-				"unit": "mmHg",
-				"status": 1
-			},
-			"heart": {
-				"value": null,
-				"unit": "次/分钟",
-				"status": 0
-			},
-			"oxygen": {
-				"value": null,
-				"unit": "%",
-				"status": 0
-			}
-		}, {
-			"_id": "5a2a3a87c5c2ef5e5489932e",
-			"day": "2017-12-08",
-			"user_id": "5a37373756563d4054bb8892",
-			"times": {
-				"$numberLong": "1512716880"
-			},
-			"sugar": {
-				"value": null,
-				"unit": "mmol/L",
-				"status": 0
-			},
-			"pressure": {
-				"dia_value": null,
-				"sys_value": null,
-				"unit": "mmHg",
-				"status": 0
-			},
-			"heart": {
-				"value": 50.0,
-				"unit": "次/分钟",
-				"status": -1
-			},
-			"oxygen": {
-				"value": null,
-				"unit": "%",
-				"status": 0
-			}
-		}, {
-			"_id": "5a2a3a87c5c2ef5e54899321",
-			"day": "2017-12-08",
-			"user_id": "5a37373756563d4054bb8892",
-			"times": {
-				"$numberLong": "1512716880"
-			},
-			"sugar": {
-				"value": 6.9,
-				"unit": "mmol/L",
-				"status": 1
-			},
-			"pressure": {
-				"dia_value": 62.0,
-				"sys_value": 120.0,
-				"unit": "mmHg",
-				"status": 0
-			},
-			"heart": {
-				"value": 50.0,
-				"unit": "次/分钟",
-				"status": -1
-			},
-			"oxygen": {
-				"value": 50.0,
-				"unit": "%",
-				"status": 0
-			}
-		}, {
-			"_id": "5a2a3a87c5c2ef5e54899322",
-			"day": "2017-12-08",
-			"user_id": "5a37373756563d4054bb8892",
-			"times": {
-				"$numberLong": "1512716880"
-			},
-			"sugar": {
-				"value": 6.9,
-				"unit": "mmol/L",
-				"status": 1
-			},
-			"pressure": {
-				"dia_value": 100.0,
-				"sys_value": 196.0,
-				"unit": "mmHg",
-				"status": 1
-			},
-			"heart": {
-				"value": 90.0,
-				"unit": "次/分钟",
-				"status": 1
-			},
-			"oxygen": {
-				"value": 60.0,
-				"unit": "%",
-				"status": 0
-			}
-		}]
-	}
+    "code":200,
+    "msg":"∑√Œ ≥…π¶",
+    "obj":{
+        "lowCount":4,
+        "normalCount":22,
+        "highCount":0,
+        "pressureList":[
+            {
+                "_id":"5a40b610f11d123e68bbf121",
+                "user_id":"12345678",
+                "record_id":"1514190310",
+                "type":0,
+                "day":"2017-12-25",
+                "status":1,
+                "value":"125/97",
+                "times":{
+                    "$numberLong":"1514190352"
+                },
+                "ssy":"125",
+                "szy":"97"
+            },
+            {
+                "_id":"5a407cc6f11d1226d0d768e0",
+                "user_id":"12345678",
+                "record_id":"1514175643",
+                "type":0,
+                "day":"2017-12-27",
+                "status":-1,
+                "value":"82/70",
+                "times":{
+                    "$numberLong":"1514175686"
+                },
+                "ssy":"82",
+                "szy":"70"
+            },
+            {
+                "_id":"5a407ba1f11d1226d0d768de",
+                "user_id":"12345678",
+                "record_id":"1514175360",
+                "type":0,
+                "day":"2017-12-25",
+                "status":1,
+                "value":"127/91",
+                "times":{
+                    "$numberLong":"1514175393"
+                },
+                "ssy":"127",
+                "szy":"91"
+            },
+            {
+                "_id":"5a406224f11d121adcbd0c46",
+                "user_id":"12345678",
+                "record_id":"1514168673",
+                "type":0,
+                "day":"2017-12-25",
+                "status":1,
+                "value":"97/86",
+                "times":{
+                    "$numberLong":"1514168868"
+                },
+                "ssy":"97",
+                "szy":"86"
+            }
+        ],
+        "oxygenList":[
+            {
+                "_id":"5a40b6fdf11d120338441db0",
+                "user_id":"12345678",
+                "record_id":"1514190310",
+                "type":1,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"93",
+                "times":{
+                    "$numberLong":"1514190589"
+                }
+            },
+            {
+                "_id":"5a40b53df11d124668b10182",
+                "user_id":"12345678",
+                "record_id":"1514190094",
+                "type":1,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"95",
+                "times":{
+                    "$numberLong":"1514190141"
+                }
+            },
+            {
+                "_id":"5a40b34df11d122420c09787",
+                "user_id":"12345678",
+                "record_id":"1514189623",
+                "type":1,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"93",
+                "times":{
+                    "$numberLong":"1514189645"
+                }
+            },
+            {
+                "_id":"5a40b205f11d123f48be18fb",
+                "user_id":"12345678",
+                "record_id":"1514189230",
+                "type":1,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"98",
+                "times":{
+                    "$numberLong":"1514189317"
+                }
+            },
+            {
+                "_id":"5a406681f11d123a0cb2cc58",
+                "user_id":"12345678",
+                "record_id":"1514169941",
+                "type":1,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"97",
+                "times":{
+                    "$numberLong":"1514169985"
+                }
+            },
+            {
+                "_id":"5a4061e1f11d121adcbd0c44",
+                "user_id":"12345678",
+                "record_id":"1514168673",
+                "type":1,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"99",
+                "times":{
+                    "$numberLong":"1514169077"
+                }
+            }
+        ],
+        "heartList":[
+            {
+                "_id":"5a40b6fdf11d120338441daf",
+                "user_id":"12345678",
+                "record_id":"1514190310",
+                "type":3,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"95",
+                "times":{
+                    "$numberLong":"1514190589"
+                }
+            },
+            {
+                "_id":"5a40b53df11d124668b10183",
+                "user_id":"12345678",
+                "record_id":"1514190094",
+                "type":3,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"99",
+                "times":{
+                    "$numberLong":"1514190141"
+                }
+            },
+            {
+                "_id":"5a40b34df11d122420c09786",
+                "user_id":"12345678",
+                "record_id":"1514189623",
+                "type":3,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"36.2",
+                "times":{
+                    "$numberLong":"1514189900"
+                }
+            },
+            {
+                "_id":"5a40b205f11d123f48be18fc",
+                "user_id":"12345678",
+                "record_id":"1514189230",
+                "type":3,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"72",
+                "times":{
+                    "$numberLong":"1514189317"
+                }
+            },
+            {
+                "_id":"5a4066dcf11d123a0cb2cc5b",
+                "user_id":"12345678",
+                "record_id":"1514170031",
+                "type":3,
+                "day":"2017-12-25",
+                "status":-1,
+                "value":"0",
+                "times":{
+                    "$numberLong":"1514170076"
+                }
+            },
+            {
+                "_id":"5a406681f11d123a0cb2cc57",
+                "user_id":"12345678",
+                "record_id":"1514169941",
+                "type":3,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"68",
+                "times":{
+                    "$numberLong":"1514169985"
+                }
+            },
+            {
+                "_id":"5a406224f11d121adcbd0c47",
+                "user_id":"12345678",
+                "record_id":"1514168673",
+                "type":3,
+                "day":"2017-12-25",
+                "status":0,
+                "value":"66",
+                "times":{
+                    "$numberLong":"1514168868"
+                }
+            }
+        ],
+        "sugarList":[]
+    }
 }

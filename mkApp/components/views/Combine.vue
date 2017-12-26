@@ -43,11 +43,11 @@
           doctorId: this.doctorId === 'nice' ? '' : this.doctorId
         }).then((res)=>{
            if(res.data.code !== 200) {
-             this.state.warnTips = true
+             this.warnTips = true
              return;
            }
            //this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})   
-
+           this.$store.commit('updateStatus', {status: 2})
            this.$router.push({ name: 'memberlist', params: { code: this.healthCode }})
            
            this.warnTips = false;

@@ -4,7 +4,7 @@
   */
 import axios from 'axios'
 
-const devMode = false;
+const devMode = true;
 
 var gurl = encodeURIComponent(location.href.split("#")[0]);
 
@@ -76,7 +76,7 @@ function requestMethod(method, url, data = null) {
                 }).then((res) => {
                     resolve(res)
                 })
-              }, 1000)
+              }, 0)
         })
     }
     return axios({

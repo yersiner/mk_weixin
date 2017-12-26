@@ -12,9 +12,10 @@
            </nav>
            <!--表格 hide-->
            <section class="tableDisplay timeStatic">
-                  
-                   <div v-if="!showFlag && chartFlag" id="chart">
-                       <LineChart :xData="UserSignData.xData" :yData="UserSignData.yData"></LineChart>
+                   <div v-show="!showFlag && chartFlag" id="chart">
+                      <figure>
+                         <chart :options="bar" ref="bar" theme="ovilia-green"></chart>
+                      </figure>
                    </div>
                    <header>
                        <p><span>正常次数</span><span class="numberIsNormal">{{UserSignData.normalCount}}</span></p>
@@ -22,50 +23,136 @@
                        <p><span>偏低</span><span class="numberIsLow">{{UserSignData.lowCount}}</span></p>
                    </header>
                    <section v-show="showFlag" id="tableItem">
-                          <section class="tableList" :key="index" v-for="(item,index) in UserSignData.data">
-                                   <h3><img src="../../../public/img/icon_Star.png"><span>{{item.day}}</span> </h3>
-                                   <p v-if="item.heart.value">
-                                     <span :class="{isHeight: item.heart.status === 1, isLow: item.heart.status === -1}">
-                                         <em>{{item.heart.value}}{{item.heart.unit}}</em>
-                                         <em >{{unitMap[item.heart.status]}}</em>
-                                     </span>
-                                      <span>{{item.times.$numberLong|minSecond}}</span>
-                                   </p>
-                                   <p v-if="item.oxygen.value">
-                                     <span :class="{isHeight: item.oxygen.status === 1, isLow: item.oxygen.status === -1}">
-                                         <em>{{item.oxygen.value}}{{item.oxygen.unit}}</em>
-                                         <em >{{unitMap[item.oxygen.status]}}</em>
-                                     </span>
-                                      <span>{{item.times.$numberLong|minSecond}}</span>
-                                   </p>
-                                   <p v-if="item.sugar.value">
-                                     <span :class="{isHeight: item.sugar.status === 1, isLow: item.sugar.status === -1}">
-                                         <em>{{item.sugar.value}}{{item.sugar.unit}}</em>
-                                         <em >{{unitMap[item.sugar.status]}}</em>
-                                     </span>
-                                      <span>{{item.times.$numberLong|minSecond}}</span>
-                                   </p>
-                                   <p v-if="item.pressure.dia_value">
-                                     <span :class="{isHeight: item.pressure.status === 1, isLow: item.pressure.status === -1}">
-                                         <em>{{item.pressure.dia_value}}/{{item.pressure.sys_value}}mmHg</em>
-                                         <em >{{unitMap[item.pressure.status]}}</em>
-                                     </span>
-                                       <span>{{item.times.$numberLong|minSecond}}</span>
-                                   </p>
-                           </section>
+                        <section class="tableList" :key="index" v-for="(itemWrap,index) in UserSignData.dataMap">
+                              <h3><img src="../../../public/img/icon_Star.png"><span>{{index}}</span> </h3>
+                              <section class="tableList" :key="cindex" v-for="(item,cindex) in itemWrap">
+                                       <p v-if="item.heart">
+                                         <span :class="{isHeight: item.heartStatus === 1, isLow: item.heartStatus === -1}">
+                                             <em>{{item.heartValue}}次/分</em>
+                                             <em >{{unitMap[item.heartStatus]}}</em>
+                                         </span>
+                                          <span>{{item.times.$numberLong|minSecond}}</span>
+                                       </p>
+                                       <p v-if="item.oxygen">
+                                         <span :class="{isHeight: item.oxygenStatus === 1, isLow: item.oxygenStatus === -1}">
+                                             <em>{{item.oxygenValue}}%</em>
+                                             <em >{{unitMap[item.oxygenStatus]}}</em>
+                                         </span>
+                                          <span>{{item.times.$numberLong|minSecond}}</span>
+                                       </p>
+                                       <p v-if="item.sugar">
+                                         <span :class="{isHeight: item.sugarStatus === 1, isLow: item.sugarStatus === -1}">
+                                             <em>{{item.sugarValue}}mol/l</em>
+                                             <em >{{unitMap[item.sugarStatus]}}</em>
+                                         </span>
+                                          <span>{{item.times.$numberLong|minSecond}}</span>
+                                       </p>
+                                       <p v-if="item.pressure">
+                                         <span :class="{isHeight: item.pressureStatus === 1, isLow: item.pressureStatus === -1}">
+                                             <em>{{item.szy}}/{{item.ssy}}mmHg</em>
+                                             <em >{{unitMap[item.pressureStatus]}}</em>
+                                         </span>
+                                           <span>{{item.times.$numberLong|minSecond}}</span>
+                                       </p>
+                               </section>
+                        </section>
                    </section>
            </section>
        </div>
 </template>
 <script>
     import { mapState } from 'vuex'
-    import LineChart from '~/mkApp/widget/echarts/line'
+    import ECharts from 'vue-echarts'
+    import 'echarts/lib/chart/bar'
+    import 'echarts/lib/chart/line'
+    import {initial as barInit, async as barAsync} from '~/mkApp/widget/echarts/data/bar'
+
+    let legendMap = {
+      '收缩压': false,
+      '舒张压': false,
+      '心率': false,
+      '血糖': false,
+      '血氧': false
+    }
+
+    let lineData = {
+      tooltip: {
+         trigger: 'axis',
+         borderColor : "#000",
+         backgroundColor:"#D1DDE6",
+         textStyle:{
+             color : "#fff",
+         },
+         axisPointer:{
+             lineStyle :{
+                 color:"#38E6FF"
+             }
+         },
+         alwaysShowContent:false
+      },
+      xAxis: {
+        data: []
+      },
+      yAxis: {
+        axisLabel: {show: true}
+      },
+      legend: {
+        data: ['收缩压','舒张压','心率','血糖','血氧'],
+        selected: legendMap
+      },
+      series: [{
+        name: '收缩压',
+        type: 'line',
+      }, {
+        name: '舒张压',
+        type: 'line',
+      }, {
+        name: '心率',
+        type: 'line',
+      }, {
+        name: '血糖',
+        type: 'line',
+      }, {
+        name: '血氧',
+        type: 'line',
+      }]
+    }
+
+    function getRelateData(name, Xdata, Ydata) {
+        let nameMap = {
+          '收缩压': false,
+          '舒张压': false,
+          '心率': false,
+          '血糖': false,
+          '血氧': false
+        }
+        nameMap[name] = true
+        return {
+          xAxis: {
+            data: Xdata[name]
+          },
+          yAxis: {
+            axisLabel: {show: true}
+          },
+          legend: {
+            data: ['收缩压','舒张压','心率','血糖','血氧'],
+            selected: nameMap
+          },
+          series: [{
+            name: name,
+            type: 'line',
+            data: Ydata[name]
+          }]
+        }
+    }
     export default {
         name: 'Record',
         data () {
             return {
                 showFlag: true,
                 chartFlag: true,
+                curSelected: '舒张压',
+                bar: lineData,
                 unitMap: {
                   "0": '正常',
                   "-1": '偏低',
@@ -75,7 +162,7 @@
             }
         },
         components: {
-          LineChart
+          chart: ECharts
         },
         asyncData({store, route}) {
           var me = this;
@@ -104,26 +191,56 @@
                }
                this.selectMember.name = curName
                this.selectMember.user_id = this.MemberList.pData1[index].value
+
+               let bar = this.$refs.bar
+
+               bar.showLoading({
+                 text: '正在加载',
+                 color: '#4ea397',
+                 maskColor: 'rgba(255, 255, 255, 0.4)'
+               })
+
                this.$store.dispatch('fetchUserSignData', {
                   user_id: this.selectMember.user_id
                }).then(()=> {
-                  this.chartFlag = false
-                  setTimeout(()=>{
-                    this.chartFlag = true
-                  }, 200)
+
+                  let curData = getRelateData(this.curSelected, this.UserSignData.xData, this.UserSignData.yData)
+                  bar.hideLoading()
+                  bar.mergeOptions(curData)
                })
             },
             toggle(flag){
                this.showFlag = flag
             }
         },
-      //调用
-        mounted(){
-            
+        mounted() {
+          console.log(this.UserSignData);
+          let initData = getRelateData('舒张压', this.UserSignData.xData, this.UserSignData.yData)
+          let bar = this.$refs.bar
+          bar.mergeOptions(initData)
+          bar.$on("legendselectchanged", (info)=>{
+             if(!info.selected[info.name]) return;
+            this.curSelected = info.name
+            let curData = getRelateData(info.name, this.UserSignData.xData, this.UserSignData.yData)
+
+            bar.mergeOptions(curData) 
+          })
         }
     }
 </script>
 <style scoped>
+      figure {
+        width: 100vw;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        margin-top:20px;
+      }
+      figure .echarts {
+          width: 100vw;
+          min-width: 100%;
+          height: 75vw;
+      }
       .activet {
         color: #38E6FF;
       }
@@ -159,7 +276,7 @@
 
     .phyDetail{
       width: 100%;
-      height: 100%;
+      background: rgb(244, 248, 252);
     }
     .preLoad {
       /*visibility: hidden;*/

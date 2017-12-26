@@ -50,7 +50,7 @@
 					<div @click="getMember(index)" class="selectItem" :key="index" v-for="(member, index) in MemberList.pData1">
 						<p>{{member.text}}</p>
 					</div>
-					<div class="selectItem" data-type="999">
+					<div @click="cancel()" class="selectItem" data-type="999">
 						<p>取消</p>
 					</div>
 				</div>
@@ -64,6 +64,9 @@
 	export default {
 	  name: "HealthGuide",
 	  methods: {
+	  	cancel() {
+	  		this.toggleTitle()
+	  	},
 	  	toggleA(){
 	  		this.Aflag = !this.Aflag
 	  	},
