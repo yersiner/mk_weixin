@@ -68,16 +68,16 @@ class WeChatAuth {
 
   setAccessToken (accessToken) {
     if (!accessToken) return false
-    window.localStorage.setItem('access_token', accessToken)
+    window.localStorage.setItem('access_token_openid', accessToken)
     return true
   }
 
   getAccessToken () {
-    return window.localStorage.getItem('access_token')
+    return window.localStorage.getItem('access_token_openid')
   }
 
   removeAccessToken () {
-    window.localStorage.removeItem('access_token')
+    window.localStorage.removeItem('access_token_openid')
   }
 
   next (next) {

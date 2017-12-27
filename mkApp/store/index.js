@@ -13,7 +13,7 @@ export default new Vuex.Store({
 			success: false,
 			error: false
 		},
-		openId: localStorage.getItem('access_token') || '',
+		openId: window.localStorage.getItem('access_token_openid') || '',
 		status: -10,
 		HostList: {
 			columns: 1,
@@ -190,7 +190,7 @@ export default new Vuex.Store({
       				})
 				}else {
       				dispatch('displayErrorLoad');
-      				commit('updateErrorText', '提交失败');
+      				commit('updateErrorText', data.msg);
 				}
 			}).catch(() => {
 				//dispatch('displayErrorLoad', {

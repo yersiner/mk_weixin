@@ -60,7 +60,7 @@
                           <label class="weui-label">住址</label>
                       </div>
                       <div class="weui-cell__bd">
-                          <input v-model='fullAddress' class="weui-input" type="tel" placeholder="请输入住址"/>
+                          <input v-model='fullAddress' class="weui-input" type="text" placeholder="请输入住址"/>
                       </div>
                   </div>
               </div>
@@ -123,12 +123,12 @@
     ]),
     data() {
       return {
-        name: 'gyfnice',
-        phone:'13020003856',
-        province:'贵州',
-        city:'贵阳',
-        district:'观山湖',
-        fullAddress:'观山湖1号',
+        name: '',
+        phone:'',
+        province:'',
+        city:'',
+        district:'',
+        fullAddress:'',
         diseaseNum: [
           {
             name:'糖尿病',
@@ -156,7 +156,7 @@
           },
         ], //病种
         doctorId: this.$route.params.doctorId === 'nice'? '' : this.$route.params.doctorId,
-        hospitalId: '5a28ad70f11d1263b832bf24',
+        hospitalId: '',
         selectCity: '请选择',
         selectHot: '请选择',
         showPickCity: false,
@@ -223,6 +223,10 @@
          }else if(!this.district) {
               this.$store.dispatch('displayErrorLoad');
               this.$store.commit('updateErrorText', '请填写地址');
+              return;
+         }else if(this.district === '市辖区') {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写具体的市辖区');
               return;
          }else if(!this.hospitalId && !this.doctorId) {
               this.$store.dispatch('displayErrorLoad');
@@ -362,7 +366,7 @@
       padding-top: 27px;
       font-weight: bold;
       color: black;
-      font-size: 22px;
+      font-size: 20px;
     }
     .choose {
       position: absolute;
