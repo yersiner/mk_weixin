@@ -44,7 +44,8 @@
 	  background: white;
 	  margin-left:2.6%;
 	  flex-basis: 9.5%;
-	  font-size: 40px;
+	  font-size: 25px;
+	  height: 40px;
 	  text-align: center;
 	  line-height: 40px;
 	  -webkit-box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.2);  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */

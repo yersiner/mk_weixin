@@ -78,9 +78,9 @@ export default {
           let status = res.data.obj.status
           store.commit('updateStatus', {status: status})
           if(to.name !== 'apply' && to.name !== 'combine' && (status === -1 || status === 1 || status === 3)) {
-             next({path: '/apply/nice'})
+             next({path: '/apply/nice', replace: true})
           }else if((to.name === 'apply' || to.name === 'combine') && status === 2){
-             next({path: '/doctorDetail'})
+             next({path: '/doctorDetail', replace: true})
           }else {
              next()
           }

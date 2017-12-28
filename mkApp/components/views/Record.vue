@@ -103,18 +103,23 @@
       series: [{
         name: '收缩压',
         type: 'line',
+        smooth: true
       }, {
         name: '舒张压',
         type: 'line',
+        smooth: true
       }, {
         name: '心率',
         type: 'line',
+        smooth: true
       }, {
         name: '血糖',
         type: 'line',
+        smooth: true
       }, {
         name: '血氧',
         type: 'line',
+        smooth: true
       }]
     }
 

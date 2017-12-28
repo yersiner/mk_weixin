@@ -39,6 +39,14 @@
                           <input @keyup="checkTel" v-model="phone" class="weui-input" type="number" placeholder="请输入手机号"/>
                       </div>
                   </div>
+                  <a  @click="showBirth()" class="weui-cell weui-cell_access" href="javascript:;">
+                      <div class="weui-cell__bd item">
+                          <p>出生日期</p>
+                      </div>
+                      <div class="weui-cell__ft" style="font-size:15px">
+                          <span>{{selectBirth}}</span>
+                      </div>
+                  </a>
                   <a  @click="showCity()" class="weui-cell weui-cell_access" href="javascript:;">
                       <div class="weui-cell__bd item">
                           <p>地区</p>
@@ -86,10 +94,16 @@
           :selectData="pickCityData"
           v-on:cancel="closeCity"
           v-on:confirm="confirmCity"></vue-pickers>
+
           <vue-pickers :hide="onceShowList" :show="showPickList"
           :selectData="HostList"
           v-on:cancel="closeList"
           v-on:confirm="confirmList"></vue-pickers>
+          
+          <vue-pickers :hide="onceShowBirthList" :show="showBirthList"
+          :selectData="birthListData"
+          v-on:cancel="closeBirthList"
+          v-on:confirm="confirmBirthList"></vue-pickers>
       </div>
   </div>
 </template>
@@ -98,6 +112,7 @@
   import VuePickers from '~/mkApp/widget/picker'
   import { mapState } from 'vuex'
   import {provs_data, citys_data, dists_data} from '~/mkApp/utils/areaData.js'
+  import {years_data, months_data, dates_data} from '~/mkApp/utils/birthDate.js'
   export default {
     name: "Foo",
     components: {
@@ -158,11 +173,14 @@
         doctorId: this.$route.params.doctorId === 'nice'? '' : this.$route.params.doctorId,
         hospitalId: '',
         selectCity: '请选择',
+        selectBirth: '请选择',
         selectHot: '请选择',
         showPickCity: false,
         showPickList: false,
         onceShow: false,
         onceShowList: false,
+        showBirthList: false,
+        onceShowBirthList: false,
         pickCityData: {
           columns: 3,
           link: true,
@@ -170,9 +188,32 @@
           pData2: citys_data,
           pData3: dists_data,
         },
+        birthListData: {
+          columns: 3,
+          pData1: years_data,
+          pData2: months_data,
+          pData3: dates_data,
+        }
       }
     },
     methods: {
+      showBirth() {
+        this.onceShowBirthList = true;
+        this.showBirthList = true;
+      },
+      closeBirthList() {
+        var me = this;
+        setTimeout(() => {
+          me.onceShowBirthList = false;
+        }, 500)
+        this.showBirthList = false;
+      },
+      confirmBirthList(data) {
+        var str = `${data.select1.value}-${data.select2.value}-${data.select3.value}`
+        //this.birth = data.select1.value
+        this.selectBirth = str
+        this.closeBirthList();
+      },
       ReApply() {
         this.$store.commit('updateStatus', {
           status: -1
@@ -204,6 +245,7 @@
             doctorId: this.doctorId,
             hospitalId: this.hospitalId
          }
+         data.birthday = (new Date(this.selectBirth).getTime()/1000)
          if(!this.name) {
               this.$store.dispatch('displayErrorLoad');
               this.$store.commit('updateErrorText', '请填写姓名');
@@ -232,7 +274,11 @@
               this.$store.dispatch('displayErrorLoad');
               this.$store.commit('updateErrorText', '请填写医院');
               return;
-         }
+         }else if(this.selectBirth === '请选择') {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写出生日期');
+              return;
+         }         
          this.$store.dispatch('submitApply', data);
       },
       closeList() {
