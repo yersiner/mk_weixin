@@ -76,7 +76,7 @@ function requestMethod(method, url, data = null) {
                 }).then((res) => {
                     resolve(res)
                 })
-              }, 1500)
+              }, 1000)
         })
     }
     return axios({

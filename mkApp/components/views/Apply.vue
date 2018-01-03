@@ -77,7 +77,7 @@
               <div class="weui-cells__title title">重点标记人群(多选)</div>
               <div class="weui-cells_form">
                     <div class="weui-cells_checkbox">
-                      <label @click="toggleItem(disease, disease.checked)" v-for="(disease,index) in diseaseNum" class="weui-cell weui-check__label" :for="disease.id">
+                      <label v-for="(disease,index) in diseaseNum" class="weui-cell weui-check__label" :for="disease.id">
                           <div class="weui-cell__bd">
                               <p>{{disease.name}}</p>
                           </div>
@@ -125,7 +125,6 @@
       }
       return store.dispatch('fetchHospitalList').catch(()=>{
          //alert('加载医院列表失败')
-         console.log('加载医院列表失败');
       });
       
       //store.dispatch('fetchApplyStatus');
@@ -289,7 +288,6 @@
         this.showPickList = false;
       },
       confirmList(data){
-        console.log(data);
         var str = `${data.select1.text}`
         this.hospitalId = data.select1.value
         this.selectHot = str
@@ -320,7 +318,6 @@
         this.showPickCity = true;
       },
       jump(t) {
-        console.log('jump--', t);
         //this.$router.push({ name: 'user', params: { id: 123 }})
         this.$router.push({ name: 'user', params: { id: 123 }})
       }

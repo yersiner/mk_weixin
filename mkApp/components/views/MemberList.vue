@@ -6,7 +6,7 @@
                   <div class="weui-cell__bd item">
                       <p style="padding-left: 25px; font-size:22px;">{{selectMember.name}}</p>
                   </div>
-                  <div class="weui-cell__ft" style="margin-right: 18px;">
+                  <div class="weui-cell__ft" style="margin-right: 18px;float:right">
                       <span>请选择</span>
                   </div>
               </div>
@@ -48,7 +48,7 @@
     name: "MemberList",
     computed: {
        totalCount() {
-           return count * 4
+           return count * 5
        },
        ...mapState([
          // map this.count to store.state.count
@@ -70,7 +70,6 @@
          //me.selectMember = me.MemberList.pData1[0].name
          //debugger;
          //store.dispatch('fetchDoctorGuides') //查询该成员的随访信息
-         console.log('error---niceMemberList');
       })
     },
     mounted () {
@@ -82,7 +81,7 @@
         pullUpLoadObj: {
             threshold: 0,
             txt: {
-             more: '加载更多',
+             more: ' ',
              noMore: '没有更多数据了'
             }
         },
@@ -115,7 +114,6 @@
       },
       onPullingUp () {
         count++;
-        //console.log('0000--->count', count);
         // 模拟上拉 加载更多数据
         this.$store.dispatch('fetchDoctorGuides', {
           user_id: this.selectMember.user_id,
@@ -126,7 +124,7 @@
               ...res.data.obj
             });
             this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
-            if(count < res.data.obj.totalCount){
+            if(this.totalCount < res.data.obj.totalCount){
               this.$refs.scroll.forceUpdate(true)
             }else{
               this.$refs.scroll.forceUpdate(false)
@@ -144,7 +142,6 @@
         var str = `${data.select1.text}`
         if(str === this.selectMember.name) {
           this.closeList();
-          console.log('same as name');
           return;
         }
         this.selectMember.name = str
@@ -202,6 +199,8 @@
     }
     .top-head {
       height: 30px;
+      line-height:30px;
+      display: block;
       position: relative;
       z-index: 10;
       background:white;
@@ -217,6 +216,7 @@
       line-height: 25px;
       width: 87%;
       margin: auto;
+      overflow: scroll;
       min-height: 75px;
     }
     .title {
@@ -242,6 +242,7 @@
       right: 10px;
     }
     .item {
+      float: left;
       color: #38E6FF;
       font-size:22px;
     }
