@@ -36,7 +36,7 @@
           this.warnTips = true;
           return;
         }
-        this.$store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
+        this.$store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在查询'})
 
         this.$store.dispatch('bindHealthNum', {
           healthCode: this.healthCode,
@@ -46,9 +46,16 @@
              this.warnTips = true
              return;
            }
-           //this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在加载'})   
+           this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '绑定成功'})  
+
+           this.$store.commit('updateLoadingStatus', {isLoading: true, type: 'success', text: '绑定成功'}) 
+
            this.$store.commit('updateStatus', {status: 2})
-           this.$router.push({ name: 'memberlist', params: { code: this.healthCode }})
+
+           setTimeout(()=>{
+              this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'success', text: '绑定成功'}) 
+              this.$router.push({ name: 'healthGuide'})
+           }, 2000)
            
            this.warnTips = false;
         }).catch(() => {

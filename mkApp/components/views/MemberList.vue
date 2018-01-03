@@ -2,14 +2,14 @@
   <div class="member-list">
       <div class="page__bd container" style="min-height: 100%;">
           <div class="weui-tab cpane">
-              <a @click="showList()" class="weui-cell weui-cell_access top-head" href="javascript:;">
+              <div @click="showList()" class="weui-cell weui-cell_access top-head" href="javascript:;">
                   <div class="weui-cell__bd item">
                       <p style="padding-left: 25px; font-size:22px;">{{selectMember.name}}</p>
                   </div>
                   <div class="weui-cell__ft" style="margin-right: 18px;">
                       <span>请选择</span>
                   </div>
-              </a>
+              </div>
               <a class="weui-cell weui-cell_access blank" href="javascript:;">
                   
               </a>
