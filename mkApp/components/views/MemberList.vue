@@ -25,7 +25,7 @@
                       <div class="weui-media-box weui-media-box_text" :key="index" v-for="(item, index) in MemberInfoList">
                           <h4 class="weui-media-box__title title"><span class="stat">★</span>
                             {{item.times.$numberLong|prettyDate}} &nbsp&nbsp&nbsp {{item.doctorName}}医生</h4>
-                          <p class="weui-media-box__desc desc">{{item.desc}}</p>
+                          <p class="weui-media-box__desc desc">{{item.suggest}}</p>
                       </div>
                   </div>
               </vue-better-scroll>

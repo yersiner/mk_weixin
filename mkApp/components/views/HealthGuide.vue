@@ -5,7 +5,7 @@
 				<div class="contentTitle">
 					<h2 @click="toggleTitle()"><span>{{selectMember.name }}</span><img src="../../../public/img/arrow_icon_white.png"/></h2>
 					<p>
-						<span>男</span>
+						<span>{{sexMap[selectMember.sex]}}</span>
 						<span>{{selectMember.age}}岁</span>
 						<span>{{selectMember.phone}}</span>
 					</p>
@@ -114,6 +114,11 @@
 	    return {
 	      showFlag: false,
 	      section: 'test Bar',
+	      sexMap: {
+	      	"-1":"未知",
+	      	1:"男",
+	      	2:"女"
+	      },
 	      Aflag: false,
 	      Bflag: false,
 	      Cflag: false,
