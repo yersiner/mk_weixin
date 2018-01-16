@@ -65,7 +65,7 @@
               <ul class="workText" v-for="(item,index) in DoctorInfo.visits_weeks">
                 <li class="weekDay">{{weekMap[index]}}</li>
                 <li><i class="microtchFamily" :class="item.forenoon ? 'microtech-gou': '' "></i></li>
-                <li><i class="microtchFamily" :class="item.atnoon ? 'microtech-gou': '' "></i></li>
+                <li><i class="microtchFamily" :class="item.at_noon ? 'microtech-gou': '' "></i></li>
                 <li><i class="microtchFamily" :class="item.evening ? 'microtech-gou': '' "></i></li>
               </ul>
               <ul class="workTextEnd">
@@ -158,7 +158,6 @@
     }
     .doctorInfo .doctorAvator{
       margin-top: 12px;
-      height: 27%;
       background-image: linear-gradient(-135deg, rgba(55,187,251,0.50) 0%, #7FBDFF 100%);
       border-radius: 4px;
       webkit-border-radius: 4px;

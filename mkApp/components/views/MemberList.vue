@@ -13,6 +13,7 @@
               <a class="weui-cell weui-cell_access blank" href="javascript:;">
                   
               </a>
+              <p v-if="MemberInfoList.length === 0" style="text-align: center; margin-top: 40px; font-size: 25px; font-weight: bold; ">请等待医生随访</p>
               <vue-better-scroll
                   style="min-height:500px"
                       class="wrapper"

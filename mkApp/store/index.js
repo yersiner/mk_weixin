@@ -174,6 +174,7 @@ export default new Vuex.Store({
 				region_id: ''
 			}).then((res) => {
 				commit('updateHostList', res.data.obj)
+      			commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
 			}).catch((res)=> {
 				commit('updateErrorText', '加载医院列表失败')
 			})

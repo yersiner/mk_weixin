@@ -292,6 +292,8 @@
       align-items: center;
       flex-flow: nowrap row;
       padding-top:10px;
+      width: 100%;
+      flex-wrap: wrap;
       padding-bottom: 18px;
     }
     nav.avatorNav .avatorItem{
@@ -301,10 +303,9 @@
       flex-flow: nowrap column;
       font-size: 13px;
       color: #8FACC8;
+      padding: 10px 30px;
     }
-    nav.avatorNav .avatorItem:nth-child(2){
-      padding: 0 44px;
-    }
+    
     .avatorItem img{
       width: 52px;
       height: 52px;
