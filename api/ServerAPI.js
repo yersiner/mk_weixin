@@ -366,7 +366,7 @@ module.exports = ServerApi;
             'to' : data['to']||'',
             'type' : data['type']||'0',
             'body' : JSON.stringify(data['body'])||'{}',
-            'option' : JSON.stringify(data['option'])||'{"push":false,"roam":true,"history":true,"sendersync":true, "route":false}',
+            'option' : JSON.stringify(data['option'])||'{"push":true,"roam":true,"history":true,"sendersync":true, "route":false}',
             'pushcontent' : data['pushcontent']||''
 		};
 		this.postDataHttps(url,postData,callback);

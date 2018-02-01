@@ -15,11 +15,12 @@ var serverAPI = require('../api/ServerAPI');
 var yx = new serverAPI(aotuConfig.appKey,aotuConfig.appSecret);
 router.post("/microtechYX",function(req,res){
     weixin.parseUser(req.body,function (msg) {
-        if(data.code==200){
+        //console.log("parseUser:" +JSON.stringify(msg));
+        if(msg.code==200){
             weixin.parseYX(req.body,msg.obj,function (data) {
-                weixin.customer(data,function (msg) {
-                    console.log(msg);
-                })
+                // console.log("parseYX:" +JSON.stringify(data));
+                var result = weixin.customer(data);
+                console.log(result)
             });
         }else{
             weixin.customer({
@@ -72,6 +73,7 @@ weixin.textMsg(function (msg) {
     };
     weixin.getUser({openId:msg.fromUserName},function (ret) {
         if(ret.code==200){
+            ///console.log(ret)
             ret = ret.obj;
             var data = {
                 from : ret.user_accId,
@@ -89,20 +91,17 @@ weixin.textMsg(function (msg) {
                     weixin.res.send();
                 }
             })
-        }else if(ret.code==506){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>你还未绑定医生，点击申请签约</a>";
-            weixin.sendMsg(resMsg);
-        }else if(ret.code==507){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/combine/nice'>没有绑定档案编号，点击绑定档案编号</a>";
-            weixin.sendMsg(resMsg);
         }else if(ret.code==509){
             resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>签约审批中，点击查看详情</a>";
             weixin.sendMsg(resMsg);
         }else if(ret.code==510){
             resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>审批不通过，点击查看详情</a>";
             weixin.sendMsg(resMsg);
-        }else{
+        }else if(ret.code==500){
             resMsg.content = "服务器异常";
+            weixin.sendMsg(resMsg);
+        }else{
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/combine/nice'>没有绑定档案编号，点击绑定档案编号</a>";
             weixin.sendMsg(resMsg);
         }
     });
@@ -157,20 +156,17 @@ weixin.imageMsg(function (msg) {
                     })
                 })
             });
-        }else if(ret.code==506){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>你还未绑定医生，点击申请签约</a>";
-            weixin.sendMsg(resMsg);
-        }else if(ret.code==507){
-            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/combine/nice'>没有绑定档案编号，点击绑定档案编号</a>";
-            weixin.sendMsg(resMsg);
         }else if(ret.code==509){
             resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>签约审批中，点击查看详情</a>";
             weixin.sendMsg(resMsg);
         }else if(ret.code==510){
             resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/apply/nice'>审批不通过，点击查看详情</a>";
             weixin.sendMsg(resMsg);
-        }else{
+        }else if(ret.code==500){
             resMsg.content = "服务器异常";
+            weixin.sendMsg(resMsg);
+        }else{
+            resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/combine/nice'>没有绑定档案编号，点击绑定档案编号</a>";
             weixin.sendMsg(resMsg);
         }
     });
@@ -186,27 +182,34 @@ weixin.eventMsg(function(msg) {
     };
     var recivedJson = {
         openId : msg.fromUserName,
-        sceneId : msg.eventKey
+        sceneId : msg.eventKey||""
     }
     var eventName = msg.event;
     if (eventName == 'subscribe') {
         //扫码登录
         console.log(msg.eventKey+"测试 sencen");
-        if(msg.eventKey!=''){
-            //保存当前关注的用户
-            weixin.saveUser(recivedJson,function (ret) {
-                //显示欢迎信息
-                if(ret.code==200){
-                    ret= ret.obj;
+        //保存当前关注的用户
+        weixin.saveUser(recivedJson,function (ret) {
+            //console.log(ret)
+            //显示欢迎信息
+            if(ret.code==200){
+                ret= ret.obj;
+                if( ret.number_no===0){
+                    var doctor_id = msg.eventKey.replace("qrscene_","");
+                    //console.log(doctor_id)
+                    resMsg.content = "欢迎您加入家庭健康管理平台，我们将竭诚为您服务。\n你的家庭医生是"+ret.gov_name+"医院的"+ret.name+"\n<a href='https://weichat.newmicrotech.cn/#/combine/"+doctor_id+"'>请获取您的健康档案 ></a>";
+                    // console.log(resMsg.content);
+                    weixin.sendMsg(resMsg);
+                }else{
                     resMsg.content = '欢迎加入家庭健康管理平台，我们将竭诚为你服务:'+
                         "\n你的家庭医生是"+ret.gov_name+"医院的"+ret.name+"";
                     weixin.sendMsg(resMsg);
                 }
-            });
-        }else{//非扫码登录
-            resMsg.content =  resMsg.content = "<a href='https://weichat.newmicrotech.cn/#/combine/"+msg.eventKey+"'>感谢您关注，请及时申请签约医生，为您提供及时便捷的健康管理服务</a>";
-            weixin.sendMsg(resMsg);
-        }
+            }else{
+                resMsg.content = "欢迎您加入家庭健康管理平台，我们将竭诚为您服务。\n<a href='https://weichat.newmicrotech.cn/#/apply/nice'>请申请签约医生></a>";
+                weixin.sendMsg(resMsg);
+            }
+        });
         /**
          * 对当前的信息类型做判断
          * @unsubscribe 关注
@@ -249,6 +252,20 @@ weixin.eventMsg(function(msg) {
 });
 //创建菜单
 weixin.createMenu(function(result){
-    console.log(result)
+    //console.log(result)
 });
+/*
+* 处理 比如文件、收藏、位置、等未知的信息
+* */
+weixin.OtherMsg(function (msg) {
+    // console.log(msg)
+    var resMsg = {
+        fromUserName: msg.toUserName,
+        toUserName: msg.fromUserName,
+        msgType: 'text',
+        content: '暂不支持此类型数据的发送',
+        funcFlag: 0
+    };
+    weixin.sendMsg(resMsg);
+})
 module.exports = router;

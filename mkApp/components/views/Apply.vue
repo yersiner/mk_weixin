@@ -108,7 +108,8 @@
       if(route.params.doctorId !== 'nice') {
          return;
       }
-      return store.dispatch('fetchHospitalList').catch(()=>{
+      return store.dispatch('fetch' +
+          'HospitalList').catch(()=>{
          //alert('加载医院列表失败')
          console.log('加载医院列表失败');
       });

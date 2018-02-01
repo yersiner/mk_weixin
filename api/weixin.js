@@ -6,8 +6,8 @@ var sha1 = require('sha1'),
     util = require('../util/util'),
     fs = require("fs"),
     https = require("https");
-    formstream = require("formstream"),
-request = require('request');
+formstream = require("formstream"),
+    request = require('request');
 
 var config = require('../config/config');
 var aotuConfig = config.wx_config.aotu;
@@ -33,9 +33,24 @@ WeiXin.prototype.checkSignature = function(req) {
     var str = sha1(array.join(""));
     return (str == this.signature)
 }
+/*组别0*/
+WeiXin.prototype.OtherMsg = function (data) {
+    emitter.on("weixinOherData",data);
+    return this;
+}
+WeiXin.prototype.parseOther = function () {
+    var msg = {
+        "toUserName": this.data.ToUserName[0],
+        "fromUserName": this.data.FromUserName[0]
+    }
+    emitter.emit("weixinOherData",msg);
+    return this;
+}
+
 /*组别1*/
 WeiXin.prototype.textMsg = function(callback) {
     emitter.on('weixinTextMsg', callback);
+    return this;
 }
 WeiXin.prototype.parseTextMsg = function() {
     var msg = {
@@ -208,6 +223,8 @@ WeiXin.prototype.parse = function() {
         case 'voice':
             this.parseVoiceMsg();
             break;
+        default:
+            this.parseOther();
     }
 }
 
@@ -278,7 +295,7 @@ WeiXin.prototype.loop = function(req, res) {
             }
         });
         self.data = req.body.xml;
-        console.log(self.data);
+       // console.log(self.data);
         self.parse();
     });
 }
@@ -312,7 +329,7 @@ WeiXin.prototype.createMenu = function(callback){
 WeiXin.prototype.createTemplate = function(msg,callback){
     var that = this;
     this.getHealthData(msg,function (data) {
-       /* console.log(data);*/
+        /* console.log(data);*/
         if (data) {
             var templateId = aotuConfig.template_id;
             var sendData = {
@@ -405,7 +422,17 @@ WeiXin.prototype.getUser = function (data,callback) {
 //云信数据解析
 WeiXin.prototype.parseUser = function (data,callback) {
     var that = this;
-    if(data.eventType==1){
+    var event = parseInt(data.eventType);
+    var msgType = {
+        CUSTOM_P2P_MSG : "CUSTOM_P2P_MSG",
+        FRIEND_ADD : "FRIEND_ADD",
+        FRIEND_DELETE : "FRIEND_DELETE"
+    }
+
+    if(event==1){
+        if(data.msgType in msgType){
+            return;
+        }
         var to = data.to;
         that.getOpenId({accId:to},function (msg) {
             callback(msg);
@@ -414,13 +441,13 @@ WeiXin.prototype.parseUser = function (data,callback) {
     //拼接数据，请求用户openId
 }
 //云信信息组装
- WeiXin.prototype.parseYX = function (resData,userData,callback) {
+WeiXin.prototype.parseYX = function (resData,userData,callback) {
     var self = this;
     var type = resData.msgType;
     switch (type){
         case "PICTURE":
-          var data = JSON.parse(resData.attach);
-          var result = {};
+            var data = JSON.parse(resData.attach);
+            var result = {};
             https.get(data.url, function(res){
                 var imgData = "";
                 res.setEncoding("binary"); //一定要设置response的编码为binary否则会下载下来的图片打不开
@@ -480,20 +507,22 @@ WeiXin.prototype.parseUser = function (data,callback) {
 
 }
 // 客服功能的使用
-WeiXin.prototype.customer = function (data,callback) {
+WeiXin.prototype.customer = function (data) {
     var that = this;
     util.getToken(aotuConfig,function (result) {
         if (result.error){
-             callback({
+            return({
                 error : 1,
                 msg : result.msg
             })
         }else {
+//           // console.log(data)
             request({url:api.customer + result.data.access_token,method:"post",body:data,json:true},function (error,response,body) {
+               // console.log("callback body" + JSON.stringify(body))
                 if(error){
-                    callback(error);
+                    return(error);
                 }else{
-                    callback(body);
+                    return(body);
                 }
             })
         }

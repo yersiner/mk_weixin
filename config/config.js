@@ -26,17 +26,13 @@ module.exports = {
                         "url":"https://weichat.newmicrotech.cn/#/healthGuide"
                     },{
                         "type":"view",
-                        "name":"智能设备",
-                        "url":"https://weichat.newmicrotech.cn"
-                    },{
-                        "type":"view",
                         "name":"康复指导",
                         "url":"https://weichat.newmicrotech.cn/#/memberlist/123"
                     }]
                 },{
-                    "name":"APP下载",
                     "type":"view",
-                    "url":"https://weichat.newmicrotech.cn"
+                    "name":"智能设备",
+                    "url":"https://weichat.newmicrotech.cn/#/jskdfj"
                 }]
             },
             tq: {

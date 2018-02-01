@@ -30,5 +30,6 @@
 		width: 20px;
 		border-radius: 100%;
 		background: #dd524d;
+		border: 1px solid #DDDDDD;
 	}
 </style>
