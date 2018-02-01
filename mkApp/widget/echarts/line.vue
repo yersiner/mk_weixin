@@ -1,148 +1,67 @@
 <template>
   <!--为echarts准备一个具备大小的容器dom-->
-  <div id="main"></div>
+  <div id="main">
+      <figure><chart :options="bar" ref="bar" theme="ovilia-green" auto-resize></chart></figure>
+      <template>
+        <p>
+          <button v-for="(item, index) in xlist" :class="index === curIndex ? 'active': ''" @click="load(index)">{{item}}</button>
+        </p>
+      </template>
+  </div>
 </template>
 <script>
-    import echarts from 'echarts/lib/echarts';
-    import 'echarts/lib/chart/line';
-    function getOption(xData, yData) {
-        return {
-            color:['#CAB1FF', '#FF8E94','#64B3F9', '#6DDACB','#FFBF67'],
-              tooltip: {
-                  trigger: 'axis',
-                 /* formatter : "90/140",*/
-                  borderColor : "#000",
-                  backgroundColor:"#D1DDE6",
-                  textStyle:{
-                      color : "#fff",
-                  },
-                  axisPointer:{
-                      lineStyle :{
-                          color:"#38E6FF"
-                      }
-                  },
-                  alwaysShowContent:true
-              },
-              legend :{
-                  data:['收缩压','舒张压','心率','血糖','血氧'],
-              },
-              grid: {
-                  left: '3%',
-                  right: '4%',
-                  bottom: '3%',
-                  containLabel: true,
-                  show: true,
-                  borderWidth: 0,
-                  borderColor:"#D1DDE6",
-                  backgroundColor: '#fff',
-              },
-              xAxis: {
-                  type: 'category',
-                  boundaryGap: false,
-                  axisLine:{
-                      lineStyle:{
-                          color : "#D1DDE6"
-                      }
-                  },
-                  axisLabel:{
-                      color : "#898EA6",
-                      fontSize : 14
-                  },
-                  //data: ['12日','13日','14日','15日','16日','17日', '18日']
-                  data: xData
-              },
-              yAxis: {
-                  type: 'value',
-                  show:true,
-                  axisLine:{
-                      show:false,
-                      lineStyle:{
-                          color : "#D1DDE6"
-                      }
-                  },
-                  axisLabel:{
-                      color : "#898EA6",
-                      fontSize : 14
-                  },
-                // data: ['0','60','90','140','200']
-                  // containLabel:false
-              },
-              series:[
-                        {
-                            name : '收缩压',
-                            type : 'line',
-                            smooth: true,
-                            //data:[60,62,65,68,68,66,63]
-                            data: yData.sys_value
-                        },{
-                            name :'舒张压',
-                            type:'line',
-                            smooth: true,
-                            data: yData.dia_value
-                            //data:[70,75,75,75,72,74]
-                        },
-                        {
-                            name:'心率',
-                            type:'line',
-                            smooth: true,
-                            data: yData.heart
-                            //data:[80,88,86,82,85,81]
-                        },
-                        {
-                            name:'血糖',
-                            type:'line',
-                            smooth: true,
-                            data: yData.sugar
-                            //data:[90,91,95,94,100,98]
-                        },{
-                            name:'血氧',
-                            type:'line',
-                            smooth: true,
-                            data: yData.oxygen
-                            //data:[109,112,111,110,102,108]
-                        }
-              ]
-          };
-        }
-        export default {
-            name: '',
-            props: {
-              xData: {
-                type: Array,
-                default: []
-              },
-              yData: {
-                type: Object,
-                default: {}
-              }
-            },
-            data () {
-                return {
-                    name: 'Line'
-                }
-            },
-            methods:{
-                drawPie(id){
-                   this.charts = echarts.init(document.getElementById(id))
-                   let Goption = getOption(this.xData, this.yData);
-                   this.charts.setOption(Goption)
-                }  
-            },
-          //调用
-            mounted(){
-                this.$nextTick(function() {
-                    this.drawPie('main')
-                })
+    import ECharts from 'vue-echarts'
+    import 'echarts/lib/chart/bar'
+    import 'echarts/lib/chart/line'
+    import {initial as barInit, async as barAsync} from './data/bar'
+
+    export default {
+        name: '',
+        components: {
+          chart: ECharts
+        },
+        data () {
+            return {
+                name: 'Line',
+                bar: barInit,
+                curIndex: 0,
+                xlist: ['收缩压','舒张压','心率','血糖','血氧'],
+                seconds: -1
             }
-}
+        },
+        methods:{
+            load (index) {
+              // simulating async data from server
+              console.log(index);
+              this.curIndex = index
+            }
+        },
+        mounted() {
+          //console.log('wover');
+          this.$refs.bar.$on("legendselectchanged", (info)=>{
+             console.log(info);
+             if(!info.selected[info.name]) return;
+             let bar = this.$refs.bar
+             this.seconds = 3
+             //return;
+             bar.showLoading({
+               text: '正在加载',
+               color: '#4ea397',
+               maskColor: 'rgba(255, 255, 255, 0.4)'
+             })
+
+             let timer = setInterval(() => {
+               this.seconds--
+               if (this.seconds === 0) {
+                 clearTimeout(timer)
+                 bar.hideLoading()
+                 bar.mergeOptions(barAsync)
+               }
+             }, 1000)
+          })
+        }
+    }
 </script>
 <style scoped>
-    * {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
-    #main {
-      height: 50%;
-    }
+   
 </style>

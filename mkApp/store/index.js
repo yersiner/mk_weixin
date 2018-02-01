@@ -13,7 +13,7 @@ export default new Vuex.Store({
 			success: false,
 			error: false
 		},
-		openId: localStorage.getItem('access_token') || '',
+		openId: window.localStorage.getItem('access_token_openid') || '',
 		status: -10,
 		HostList: {
 			columns: 1,
@@ -37,8 +37,13 @@ export default new Vuex.Store({
 	        familys: ""      //# 家族史
 		},
 		UserSignData: {
-			xData: [],
+			xData: {
+
+			},
 			yData: {
+
+			},
+			dataMap: {
 
 			}
 		},
@@ -169,6 +174,7 @@ export default new Vuex.Store({
 				region_id: ''
 			}).then((res) => {
 				commit('updateHostList', res.data.obj)
+      			commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
 			}).catch((res)=> {
 				commit('updateErrorText', '加载医院列表失败')
 			})
@@ -185,7 +191,7 @@ export default new Vuex.Store({
       				})
 				}else {
       				dispatch('displayErrorLoad');
-      				commit('updateErrorText', '提交失败');
+      				commit('updateErrorText', data.msg);
 				}
 			}).catch(() => {
 				//dispatch('displayErrorLoad', {
@@ -274,31 +280,86 @@ export default new Vuex.Store({
 	    updateUserSignData(state, payload) {
 	    	state.UserSignData = Object.assign({}, state.UserSignData, payload)
 
-	    	let xData = payload.data.map((item)=>{
-	    		return (item.day.slice(8) + '日')
-	    	})
+	    	console.log('list--->', payload);
+	    	let dataMap = {}
 
-	    	Vue.set(state.UserSignData, 'xData', xData);
+	    	let xData = {
+	    		'收缩压': payload.pressureList.map((item) => {
+	    			if(!dataMap[item.day]) {
+	    				dataMap[item.day] = [];
+	    			}
+	    			dataMap[item.day].push({
+	    				times: item.times,
+	    				pressure: true,
+	    				ssy: item.ssy,
+	    				szy: item.szy,
+	    				pressureStatus: item.status
+	    			})
+	    			return (item.day.slice(8) + '日')
+	    		}),
+	    		'舒张压': payload.pressureList.map((item) => {
+	    			return (item.day.slice(8) + '日')
+	    		}),
+	    		'心率': payload.heartList.map((item) => {
+	    			if(!dataMap[item.day]) {
+	    				dataMap[item.day] = [];
+	    			}
+	    			dataMap[item.day].push({
+	    				times: item.times,
+	    				heart: true,
+	    				heartValue: item.value,
+	    				heartStatus: item.status
+	    			})
+	    			return (item.day.slice(8) + '日')
+	    		}),
+	    		'血糖': payload.sugarList.map((item) => {
+	    			if(!dataMap[item.day]) {
+	    				dataMap[item.day] = [];
+	    			}
+	    			dataMap[item.day].push({
+	    				times: item.times,
+	    				sugarValue: item.value,
+	    				sugar: true,
+	    				sugarStatus: item.status
+	    			})
+	    			return (item.day.slice(8) + '日')
+	    		}),
+	    		'血氧': payload.oxygenList.map((item) => {
+	    			if(!dataMap[item.day]) {
+	    				dataMap[item.day] = [];
+	    			}
+	    			dataMap[item.day].push({
+	    				times: item.times,
+	    				oxygenValue: item.value,
+	    				oxygen: true,
+	    				oxygenStatus: item.status
+	    			})
+	    			return (item.day.slice(8) + '日')
+	    		})
+	    	}
 
 	    	let yData = {
-	    		heart: payload.data.map((item)=>{
-		    		return item.heart.value
+	    		'收缩压': payload.pressureList.map((item)=>{
+		    		return item.ssy
 		    	}),
-		    	oxygen:payload.data.map((item)=>{
-		    		return item.oxygen.value
+	    		'舒张压': payload.pressureList.map((item)=>{
+		    		return item.szy
 		    	}),
-		    	dia_value: payload.data.map((item)=>{
-		    		return item.pressure.dia_value
+	    		'心率': payload.heartList.map((item)=>{
+		    		return item.value
 		    	}),
-		    	sys_value: payload.data.map((item)=>{
-		    		return item.pressure.sys_value
+	    		'血糖': payload.sugarList.map((item)=>{
+		    		return item.value
 		    	}),
-		    	sugar: payload.data.map((item)=>{
-		    		return item.sugar.value
+	    		'血氧': payload.oxygenList.map((item)=>{
+		    		return item.value
 		    	})
 	    	}
+
+	    	console.log(xData, yData);
+	    	Vue.set(state.UserSignData, 'xData', xData);
 	    	Vue.set(state.UserSignData, 'yData', yData);
-	    	console.log('UserSignData-->', state.UserSignData);
+	    	Vue.set(state.UserSignData, 'dataMap', dataMap);
 	    	
 	    },
 	    updateHealthRecord(state, payload) {

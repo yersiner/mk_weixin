@@ -1,6 +1,6 @@
 <template>
 	<div class="notFond">
-		<h1><i>!</i>暂未开放</h1>
+		<h1>暂未开放</h1>
 	</div>
 </template>
 <script>
@@ -25,7 +25,7 @@
 		align-items: center;
 	}
 	.notFond i{
-		display: block;
+		display: inline-block;
 		height: 20px;
 		width: 20px;
 		border-radius: 100%;

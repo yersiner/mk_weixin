@@ -68,18 +68,19 @@ export default {
       }
       //next()
      //store.commit('updateLoadingStatus', {isLoading: true, type: 'load', text: '正在加载'})
-
+      //console.log('toName', to.name);
+      if(to.name === 'NotFoundView') {
+         next();
+         return;
+      }
       store.dispatch('fetchApplyStatus').then((res)=>{
           //获取签约的状态
-          
           let status = res.data.obj.status
-          console.log('获取签约的状态-gyf', status);
           store.commit('updateStatus', {status: status})
-      
           if(to.name !== 'apply' && to.name !== 'combine' && (status === -1 || status === 1 || status === 3)) {
-             next({path: '/apply/nice'})
+             next({path: '/apply/nice', replace: true})
           }else if((to.name === 'apply' || to.name === 'combine') && status === 2){
-             next({path: '/doctorDetail'})
+             next({path: '/doctorDetail', replace: true})
           }else {
              next()
           }

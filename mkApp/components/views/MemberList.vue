@@ -2,17 +2,18 @@
   <div class="member-list">
       <div class="page__bd container" style="min-height: 100%;">
           <div class="weui-tab cpane">
-              <a @click="showList()" class="weui-cell weui-cell_access top-head" href="javascript:;">
+              <div @click="showList()" class="weui-cell weui-cell_access top-head" href="javascript:;">
                   <div class="weui-cell__bd item">
                       <p style="padding-left: 25px; font-size:22px;">{{selectMember.name}}</p>
                   </div>
-                  <div class="weui-cell__ft" style="margin-right: 18px;">
+                  <div class="weui-cell__ft" style="margin-right: 18px;float:right">
                       <span>请选择</span>
                   </div>
-              </a>
+              </div>
               <a class="weui-cell weui-cell_access blank" href="javascript:;">
                   
               </a>
+              <p v-if="MemberInfoList.length === 0" style="text-align: center; margin-top: 40px; font-size: 25px; font-weight: bold; ">请等待医生随访</p>
               <vue-better-scroll
                   style="min-height:500px"
                       class="wrapper"
@@ -25,7 +26,7 @@
                       <div class="weui-media-box weui-media-box_text" :key="index" v-for="(item, index) in MemberInfoList">
                           <h4 class="weui-media-box__title title"><span class="stat">★</span>
                             {{item.times.$numberLong|prettyDate}} &nbsp&nbsp&nbsp {{item.doctorName}}医生</h4>
-                          <p class="weui-media-box__desc desc">{{item.desc}}</p>
+                          <p class="weui-media-box__desc desc">{{item.suggest}}</p>
                       </div>
                   </div>
               </vue-better-scroll>
@@ -48,7 +49,7 @@
     name: "MemberList",
     computed: {
        totalCount() {
-           return count * 4
+           return count * 5
        },
        ...mapState([
          // map this.count to store.state.count
@@ -70,7 +71,6 @@
          //me.selectMember = me.MemberList.pData1[0].name
          //debugger;
          //store.dispatch('fetchDoctorGuides') //查询该成员的随访信息
-         console.log('error---niceMemberList');
       })
     },
     mounted () {
@@ -82,7 +82,7 @@
         pullUpLoadObj: {
             threshold: 0,
             txt: {
-             more: '加载更多',
+             more: ' ',
              noMore: '没有更多数据了'
             }
         },
@@ -115,7 +115,6 @@
       },
       onPullingUp () {
         count++;
-        //console.log('0000--->count', count);
         // 模拟上拉 加载更多数据
         this.$store.dispatch('fetchDoctorGuides', {
           user_id: this.selectMember.user_id,
@@ -125,7 +124,8 @@
               current: true,
               ...res.data.obj
             });
-            if(count < res.data.obj.totalCount){
+            this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
+            if(this.totalCount < res.data.obj.totalCount){
               this.$refs.scroll.forceUpdate(true)
             }else{
               this.$refs.scroll.forceUpdate(false)
@@ -143,7 +143,6 @@
         var str = `${data.select1.text}`
         if(str === this.selectMember.name) {
           this.closeList();
-          console.log('same as name');
           return;
         }
         this.selectMember.name = str
@@ -160,6 +159,8 @@
             current: false,
             ...res.data.obj
           });
+          this.$store.commit('updateLoadingStatus', {isLoading: false, type: 'load', text: '正在提交'})
+
         })
         this.closeList();
       },
@@ -199,6 +200,8 @@
     }
     .top-head {
       height: 30px;
+      line-height:30px;
+      display: block;
       position: relative;
       z-index: 10;
       background:white;
@@ -214,6 +217,7 @@
       line-height: 25px;
       width: 87%;
       margin: auto;
+      overflow: scroll;
       min-height: 75px;
     }
     .title {
@@ -239,6 +243,7 @@
       right: 10px;
     }
     .item {
+      float: left;
       color: #38E6FF;
       font-size:22px;
     }

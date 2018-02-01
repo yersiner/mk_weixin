@@ -39,7 +39,7 @@ const routers = [{
 	component: Record,
     meta: {title: '个人体格数据', auth: true}
 },{
-	path: '/',
+	path: '*',
 	name: 'NotFoundView',
 	component: NotFoundView,
     meta: {title: '该页面无法显示', auth: true}

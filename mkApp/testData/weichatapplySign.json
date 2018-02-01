@@ -2,7 +2,7 @@
 	"code":200,
     "msg":"请求成功",
     "obj":{
-        "status": 1,
+        "status": 2,
         "desc": "提交成功"
     }
 }

@@ -39,6 +39,14 @@
                           <input @keyup="checkTel" v-model="phone" class="weui-input" type="number" placeholder="请输入手机号"/>
                       </div>
                   </div>
+                  <a  @click="showBirth()" class="weui-cell weui-cell_access" href="javascript:;">
+                      <div class="weui-cell__bd item">
+                          <p>出生日期</p>
+                      </div>
+                      <div class="weui-cell__ft" style="font-size:15px">
+                          <span>{{selectBirth}}</span>
+                      </div>
+                  </a>
                   <a  @click="showCity()" class="weui-cell weui-cell_access" href="javascript:;">
                       <div class="weui-cell__bd item">
                           <p>地区</p>
@@ -60,7 +68,7 @@
                           <label class="weui-label">住址</label>
                       </div>
                       <div class="weui-cell__bd">
-                          <input v-model='fullAddress' class="weui-input" type="tel" placeholder="请输入住址"/>
+                          <input v-model='fullAddress' class="weui-input" type="text" placeholder="请输入住址"/>
                       </div>
                   </div>
               </div>
@@ -69,7 +77,7 @@
               <div class="weui-cells__title title">重点标记人群(多选)</div>
               <div class="weui-cells_form">
                     <div class="weui-cells_checkbox">
-                      <label @click="toggleItem(disease, disease.checked)" v-for="(disease,index) in diseaseNum" class="weui-cell weui-check__label" :for="disease.id">
+                      <label v-for="(disease,index) in diseaseNum" class="weui-cell weui-check__label" :for="disease.id">
                           <div class="weui-cell__bd">
                               <p>{{disease.name}}</p>
                           </div>
@@ -86,10 +94,16 @@
           :selectData="pickCityData"
           v-on:cancel="closeCity"
           v-on:confirm="confirmCity"></vue-pickers>
+
           <vue-pickers :hide="onceShowList" :show="showPickList"
           :selectData="HostList"
           v-on:cancel="closeList"
           v-on:confirm="confirmList"></vue-pickers>
+          
+          <vue-pickers :hide="onceShowBirthList" :show="showBirthList"
+          :selectData="birthListData"
+          v-on:cancel="closeBirthList"
+          v-on:confirm="confirmBirthList"></vue-pickers>
       </div>
   </div>
 </template>
@@ -98,6 +112,7 @@
   import VuePickers from '~/mkApp/widget/picker'
   import { mapState } from 'vuex'
   import {provs_data, citys_data, dists_data} from '~/mkApp/utils/areaData.js'
+  import {years_data, months_data, dates_data} from '~/mkApp/utils/birthDate.js'
   export default {
     name: "Foo",
     components: {
@@ -111,7 +126,6 @@
       return store.dispatch('fetch' +
           'HospitalList').catch(()=>{
          //alert('加载医院列表失败')
-         console.log('加载医院列表失败');
       });
       
       //store.dispatch('fetchApplyStatus');
@@ -124,12 +138,12 @@
     ]),
     data() {
       return {
-        name: 'gyfnice',
-        phone:'13020003856',
-        province:'贵州',
-        city:'贵阳',
-        district:'观山湖',
-        fullAddress:'观山湖1号',
+        name: '',
+        phone:'',
+        province:'',
+        city:'',
+        district:'',
+        fullAddress:'',
         diseaseNum: [
           {
             name:'糖尿病',
@@ -157,13 +171,16 @@
           },
         ], //病种
         doctorId: this.$route.params.doctorId === 'nice'? '' : this.$route.params.doctorId,
-        hospitalId: '5a28ad70f11d1263b832bf24',
+        hospitalId: '',
         selectCity: '请选择',
+        selectBirth: '请选择',
         selectHot: '请选择',
         showPickCity: false,
         showPickList: false,
         onceShow: false,
         onceShowList: false,
+        showBirthList: false,
+        onceShowBirthList: false,
         pickCityData: {
           columns: 3,
           link: true,
@@ -171,9 +188,32 @@
           pData2: citys_data,
           pData3: dists_data,
         },
+        birthListData: {
+          columns: 3,
+          pData1: years_data,
+          pData2: months_data,
+          pData3: dates_data,
+        }
       }
     },
     methods: {
+      showBirth() {
+        this.onceShowBirthList = true;
+        this.showBirthList = true;
+      },
+      closeBirthList() {
+        var me = this;
+        setTimeout(() => {
+          me.onceShowBirthList = false;
+        }, 500)
+        this.showBirthList = false;
+      },
+      confirmBirthList(data) {
+        var str = `${data.select1.value}-${data.select2.value}-${data.select3.value}`
+        //this.birth = data.select1.value
+        this.selectBirth = str
+        this.closeBirthList();
+      },
       ReApply() {
         this.$store.commit('updateStatus', {
           status: -1
@@ -205,6 +245,7 @@
             doctorId: this.doctorId,
             hospitalId: this.hospitalId
          }
+         data.birthday = (new Date(this.selectBirth).getTime()/1000)
          if(!this.name) {
               this.$store.dispatch('displayErrorLoad');
               this.$store.commit('updateErrorText', '请填写姓名');
@@ -225,11 +266,19 @@
               this.$store.dispatch('displayErrorLoad');
               this.$store.commit('updateErrorText', '请填写地址');
               return;
+         }else if(this.district === '市辖区') {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写具体的市辖区');
+              return;
          }else if(!this.hospitalId && !this.doctorId) {
               this.$store.dispatch('displayErrorLoad');
               this.$store.commit('updateErrorText', '请填写医院');
               return;
-         }
+         }else if(this.selectBirth === '请选择') {
+              this.$store.dispatch('displayErrorLoad');
+              this.$store.commit('updateErrorText', '请填写出生日期');
+              return;
+         }         
          this.$store.dispatch('submitApply', data);
       },
       closeList() {
@@ -240,7 +289,6 @@
         this.showPickList = false;
       },
       confirmList(data){
-        console.log(data);
         var str = `${data.select1.text}`
         this.hospitalId = data.select1.value
         this.selectHot = str
@@ -271,7 +319,6 @@
         this.showPickCity = true;
       },
       jump(t) {
-        console.log('jump--', t);
         //this.$router.push({ name: 'user', params: { id: 123 }})
         this.$router.push({ name: 'user', params: { id: 123 }})
       }
@@ -363,7 +410,7 @@
       padding-top: 27px;
       font-weight: bold;
       color: black;
-      font-size: 22px;
+      font-size: 20px;
     }
     .choose {
       position: absolute;

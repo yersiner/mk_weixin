@@ -4,9 +4,9 @@
  */
  const _shareDefault = {
     title: '蜂鸟健康',
-    desc: '蜂鸟健康，健康一家人',
+    desc: '家庭健康守门人，为您提供及时、便捷的医疗健康管理服务，老人省心，子女安心',
     link: location.href,
-    imgUrl: 'http://spread.static.diditaxi.com.cn/bus/spread/static/static/img/logo_diditaxi_a918fd1.jpg'
+    imgUrl: 'https://weichat.newmicrotech.cn/img/80.jpg'
 }
 export default  {
     init(store) {

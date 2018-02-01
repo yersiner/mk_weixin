@@ -66,7 +66,6 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
 // 如果是非开发环境，则页面只输出简单的错误信息
 app.use(function(err, req, res, next) { // jshint ignore:line
     res.status(err.status || 500);

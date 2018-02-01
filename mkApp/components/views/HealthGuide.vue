@@ -5,7 +5,7 @@
 				<div class="contentTitle">
 					<h2 @click="toggleTitle()"><span>{{selectMember.name }}</span><img src="../../../public/img/arrow_icon_white.png"/></h2>
 					<p>
-						<span>男</span>
+						<span>{{sexMap[selectMember.sex]}}</span>
 						<span>{{selectMember.age}}岁</span>
 						<span>{{selectMember.phone}}</span>
 					</p>
@@ -50,7 +50,7 @@
 					<div @click="getMember(index)" class="selectItem" :key="index" v-for="(member, index) in MemberList.pData1">
 						<p>{{member.text}}</p>
 					</div>
-					<div class="selectItem" data-type="999">
+					<div @click="cancel()" class="selectItem" data-type="999">
 						<p>取消</p>
 					</div>
 				</div>
@@ -64,6 +64,9 @@
 	export default {
 	  name: "HealthGuide",
 	  methods: {
+	  	cancel() {
+	  		this.toggleTitle()
+	  	},
 	  	toggleA(){
 	  		this.Aflag = !this.Aflag
 	  	},
@@ -111,6 +114,11 @@
 	    return {
 	      showFlag: false,
 	      section: 'test Bar',
+	      sexMap: {
+	      	"-1":"未知",
+	      	1:"男",
+	      	2:"女"
+	      },
 	      Aflag: false,
 	      Bflag: false,
 	      Cflag: false,

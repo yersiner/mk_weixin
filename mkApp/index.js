@@ -37,7 +37,7 @@ import Api from '~/api/mkapi'
 Api.interceptors(store)
 //require('./utils/weixin')
 
-//require('es6-promise').polyfill()
+require('es6-promise').polyfill()
 
 // Routing logic
 var router = new VueRouter({
@@ -127,7 +127,7 @@ router.beforeResolve((to, from, next) => {
 
 router.afterEach(routes => {
   if(typeof routes.meta.description !== undefined) {
-      console.log('-->', routes.meta.description);
+      //console.log('-->', routes.meta.description);
   }
 })
 
@@ -137,3 +137,27 @@ new Vue({
   router: router,
   render: h => h(AppView)
 })
+
+
+/**
+* @param {String}  errorMessage   错误信息
+* @param {String}  scriptURI      出错的文件
+* @param {Long}    lineNumber     出错代码的行号
+* @param {Long}    columnNumber   出错代码的列号
+* @param {Object}  errorObj       错误的详细信息，Anything
+*/
+function error(msg,url,line){
+   var REPORT_URL = "/static/img/error_log.gif"; // 收集上报数据的信息
+   var m =[msg, url, line, navigator.userAgent, +new Date];// 收集错误信息，发生错误的脚本文件网络地址，用户代理信息，时间
+   var url = REPORT_URL + m.join('||');// 组装错误上报信息内容URL
+   var img = new Image;
+   img.onload = img.onerror = function(){
+      img = null;
+   };
+   console.log(url);
+   img.src = url;// 发送数据到后台cgi
+}
+// 监听错误上报
+window.onerror = function(msg,url,line){
+   error(msg,url,line);
+}
